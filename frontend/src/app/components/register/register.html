@@ -1,1 +1,68 @@
-<p>register works!</p>
+<div class="register-container">
+  <div class="register-card">
+    <h2>Join CampusPulse</h2>
+    <p class="subtitle">Create your account to get started</p>
+
+    <div *ngIf="errorMessage" class="error-alert">
+      {{ errorMessage }}
+    </div>
+
+    <form (ngSubmit)="onRegister()">
+      <div class="form-group">
+        <label for="name">Full Name</label>
+        <input 
+          type="text" 
+          id="name" 
+          name="name" 
+          [(ngModel)]="userData.name" 
+          required 
+          placeholder="John Doe"
+        >
+      </div>
+
+      <div class="form-group">
+        <label for="email">Email Address</label>
+        <input 
+          type="email" 
+          id="email" 
+          name="email" 
+          [(ngModel)]="userData.email" 
+          required 
+          placeholder="student@campus.edu"
+        >
+      </div>
+
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input 
+          type="password" 
+          id="password" 
+          name="password" 
+          [(ngModel)]="userData.password" 
+          required 
+          placeholder="••••••••"
+        >
+      </div>
+
+      <div class="form-group">
+        <label for="password_confirmation">Confirm Password</label>
+        <input 
+          type="password" 
+          id="password_confirmation" 
+          name="password_confirmation" 
+          [(ngModel)]="userData.password_confirmation" 
+          required 
+          placeholder="••••••••"
+        >
+      </div>
+
+      <button type="submit" [disabled]="isLoading" class="btn-primary">
+        {{ isLoading ? 'Creating account...' : 'Register' }}
+      </button>
+    </form>
+
+    <div class="footer-links">
+      <p>Already have an account? <a routerLink="/login">Sign in here</a></p>
+    </div>
+  </div>
+</div>
