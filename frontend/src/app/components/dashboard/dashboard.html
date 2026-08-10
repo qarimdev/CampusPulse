@@ -1,0 +1,37 @@
+<div class="dashboard-wrapper">
+  <!-- Top Navigation Bar -->
+  <header class="navbar">
+    <div class="nav-brand">
+      <span class="logo">CampusPulse</span>
+    </div>
+    <nav class="nav-menu">
+      <a class="nav-link active">Dashboard</a>
+      <a class="nav-link">Events</a>
+      <a class="nav-link">Clubs</a>
+      <button (click)="onLogout()" class="btn-logout">Logout</button>
+    </nav>
+  </header>
+
+  <!-- Main Content Area -->
+  <main class="dashboard-content">
+    <div class="welcome-card">
+      <h1>Welcome to CampusPulse</h1>
+      <p>Your central hub for campus updates, club announcements, and upcoming events.</p>
+    </div>
+
+    <div class="stats-grid">
+      <div class="stat-card">
+        <h3>Upcoming Events</h3>
+        <p class="stat-number">0</p>
+      </div>
+      <div class="stat-card">
+        <h3>Joined Clubs</h3>
+        <p class="stat-number">0</p>
+      </div>
+      <div class="stat-card">
+        <h3>Active Notifications</h3>
+        <p class="stat-number">0</p>
+      </div>
+    </div>
+  </main>
+</div>
