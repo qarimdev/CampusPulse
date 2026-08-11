@@ -1,23 +1,28 @@
 <div class="login-container">
   <div class="login-card">
-    <h2>Welcome to CampusPulse</h2>
-    <p class="subtitle">Sign in to stay connected with campus events</p>
-
-    <div *ngIf="errorMessage" class="error-alert">
-      {{ errorMessage }}
+    <div class="brand-header">
+      <span class="campus-badge">CampusPulse</span>
+      <h2>Welcome Back! 👋</h2>
+      <p class="subtitle">Log in to check your classes, events, and campus updates.</p>
     </div>
 
-    <form (ngSubmit)="onLogin()">
+    @if (errorMessage()) {
+      <div class="error-alert">
+        {{ errorMessage() }}
+      </div>
+    }
+
+    <form (ngSubmit)="onSubmit()">
       <div class="form-group">
-        <label for="email">Email Address</label>
+        <label for="email">Student Email</label>
         <input 
           type="email" 
           id="email" 
+          [(ngModel)]="email" 
           name="email" 
-          [(ngModel)]="credentials.email" 
+          placeholder="e.g. alex@university.edu"
           required 
-          placeholder="student@campus.edu"
-        >
+        />
       </div>
 
       <div class="form-group">
@@ -25,20 +30,20 @@
         <input 
           type="password" 
           id="password" 
+          [(ngModel)]="password" 
           name="password" 
-          [(ngModel)]="credentials.password" 
-          required 
           placeholder="••••••••"
-        >
+          required 
+        />
       </div>
 
-      <button type="submit" [disabled]="isLoading" class="btn-primary">
-        {{ isLoading ? 'Signing in...' : 'Sign In' }}
+      <button type="submit" class="btn-primary" [disabled]="isLoading()">
+        {{ isLoading() ? 'Signing you in...' : 'Sign In' }}
       </button>
     </form>
 
     <div class="footer-links">
-      <p>Don't have an account? <a routerLink="/register">Register here</a></p>
+      <p>Don't have an account? <a routerLink="/register">Create one here</a></p>
     </div>
   </div>
 </div>

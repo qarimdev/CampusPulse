@@ -1,36 +1,48 @@
-<div class="dashboard-wrapper">
-  <!-- Top Navigation Bar -->
+<div class="dashboard-layout">
+  <!-- Top Navbar -->
   <header class="navbar">
-    <div class="nav-brand">
-      <span class="logo">CampusPulse</span>
+    <div class="brand">
+      <span class="logo-icon">⚡</span>
+      <span class="logo-text">CampusPulse</span>
     </div>
-    <nav class="nav-menu">
-      <a class="nav-link active">Dashboard</a>
-      <a class="nav-link">Events</a>
-      <a class="nav-link">Clubs</a>
-      <button (click)="onLogout()" class="btn-logout">Logout</button>
-    </nav>
+
+    <div class="user-menu">
+      <span class="user-name">Welcome, {{ currentUser()?.name || 'Student' }}</span>
+      <button class="btn-logout" (click)="onLogout()">Logout</button>
+    </div>
   </header>
 
   <!-- Main Content Area -->
-  <main class="dashboard-content">
-    <div class="welcome-card">
-      <h1>Welcome to CampusPulse</h1>
-      <p>Your central hub for campus updates, club announcements, and upcoming events.</p>
-    </div>
+  <main class="main-content">
+    <section class="welcome-banner">
+      <h1>Hello, {{ currentUser()?.name || 'Student' }}! 👋</h1>
+      <p>Here is what's happening around campus today.</p>
+    </section>
 
+    <!-- Quick Stats Grid -->
     <div class="stats-grid">
       <div class="stat-card">
-        <h3>Upcoming Events</h3>
-        <p class="stat-number">0</p>
+        <span class="stat-icon">📚</span>
+        <div class="stat-info">
+          <h3>4</h3>
+          <p>Active Courses</p>
+        </div>
       </div>
+
       <div class="stat-card">
-        <h3>Joined Clubs</h3>
-        <p class="stat-number">0</p>
+        <span class="stat-icon">📅</span>
+        <div class="stat-info">
+          <h3>2</h3>
+          <p>Upcoming Events</p>
+        </div>
       </div>
+
       <div class="stat-card">
-        <h3>Active Notifications</h3>
-        <p class="stat-number">0</p>
+        <span class="stat-icon">🔔</span>
+        <div class="stat-info">
+          <h3>3</h3>
+          <p>New Notifications</p>
+        </div>
       </div>
     </div>
   </main>

@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../services/auth';
@@ -12,39 +12,46 @@ import { AuthService } from '../../services/auth';
   styleUrl: './register.scss',
 })
 export class RegisterComponent {
-  userData = {
-    name: '',
-    email: '',
-    password: '',
-    password_confirmation: '',
-  };
+  private authService = inject(AuthService);
+  private router = inject(Router);
 
-  errorMessage: string = '';
-  isLoading: boolean = false;
+  name = '';
+  email = '';
+  password = '';
+  password_confirmation = '';
 
-  constructor(
-    private authService: AuthService,
-    private router: Router,
-  ) {}
+  errorMessage = signal<string | null>(null);
+  isLoading = signal<boolean>(false);
 
-  onRegister() {
-    if (this.userData.password !== this.userData.password_confirmation) {
-      this.errorMessage = 'Passwords do not match.';
+  onSubmit(): void {
+    if (!this.name || !this.email || !this.password) {
+      this.errorMessage.set('Please fill in all required fields.');
       return;
     }
 
-    this.isLoading = true;
-    this.errorMessage = '';
+    if (this.password !== this.password_confirmation) {
+      this.errorMessage.set('Passwords do not match.');
+      return;
+    }
 
-    this.authService.register(this.userData).subscribe({
-      next: (res) => {
-        this.isLoading = false;
-        console.log('Registration successful', res);
+    this.isLoading.set(true);
+    this.errorMessage.set(null);
+
+    const payload = {
+      name: this.name,
+      email: this.email,
+      password: this.password,
+      password_confirmation: this.password_confirmation,
+    };
+
+    this.authService.register(payload).subscribe({
+      next: () => {
+        this.isLoading.set(false);
         this.router.navigate(['/dashboard']);
       },
       error: (err) => {
-        this.isLoading = false;
-        this.errorMessage = err.error?.message || 'Registration failed. Please try again.';
+        this.isLoading.set(false);
+        this.errorMessage.set(err.error?.message || 'Registration failed. Please try again.');
       },
     });
   }

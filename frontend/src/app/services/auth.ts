@@ -1,50 +1,67 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, inject, signal } from '@angular/core';
+import { Router } from '@angular/router';
 import { Observable, tap } from 'rxjs';
+
+export interface AuthResponse {
+  token: string;
+  user: any;
+}
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
+  private http = inject(HttpClient);
+  private router = inject(Router);
+
+  // Replace with your actual Laravel API URL
   private apiUrl = 'http://127.0.0.1:8000/api';
 
-  constructor(private http: HttpClient) {}
+  // Signal to keep track of authentication status
+  currentUser = signal<any | null>(this.getUserFromStorage());
 
-  register(userData: any): Observable<any> {
-    return this.http.post(`${this.apiUrl}/register`, userData).pipe(
-      tap((res: any) => {
-        if (res.token) {
-          localStorage.setItem('auth_token', res.token);
-        }
-      }),
-    );
+  login(credentials: { email: string; password: string }): Observable<AuthResponse> {
+    return this.http
+      .post<AuthResponse>(`${this.apiUrl}/login`, credentials)
+      .pipe(tap((res) => this.handleAuthSuccess(res)));
   }
 
-  login(credentials: any): Observable<any> {
-    return this.http.post(`${this.apiUrl}/login`, credentials).pipe(
-      tap((res: any) => {
-        if (res.token) {
-          localStorage.setItem('auth_token', res.token);
-        }
-      }),
-    );
+  register(userData: any): Observable<AuthResponse> {
+    return this.http
+      .post<AuthResponse>(`${this.apiUrl}/register`, userData)
+      .pipe(tap((res) => this.handleAuthSuccess(res)));
   }
 
   logout(): Observable<any> {
-    const token = localStorage.getItem('auth_token');
-    const headers = { Authorization: `Bearer ${token}` };
-    return this.http.post(`${this.apiUrl}/logout`, {}, { headers }).pipe(
+    return this.http.post(`${this.apiUrl}/logout`, {}).pipe(
       tap(() => {
-        localStorage.removeItem('auth_token');
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+        this.currentUser.set(null);
+        this.router.navigate(['/login']);
       }),
     );
   }
 
-  isLoggedIn(): boolean {
-    return !!localStorage.getItem('auth_token');
+  getToken(): string | null {
+    return localStorage.getItem('token');
   }
 
-  getToken(): string | null {
-    return localStorage.getItem('auth_token');
+  isAuthenticated(): boolean {
+    return !!this.getToken();
+  }
+
+  private handleAuthSuccess(res: AuthResponse): void {
+    if (res.token) {
+      localStorage.setItem('token', res.token);
+      localStorage.setItem('user', JSON.stringify(res.user));
+      this.currentUser.set(res.user);
+    }
+  }
+
+  private getUserFromStorage(): any | null {
+    const user = localStorage.getItem('user');
+    return user ? JSON.parse(user) : null;
   }
 }

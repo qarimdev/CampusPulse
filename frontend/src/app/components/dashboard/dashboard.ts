@@ -1,6 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
-import { Router } from '@angular/router';
+import { Component, inject } from '@angular/core';
 import { AuthService } from '../../services/auth';
 
 @Component({
@@ -11,21 +10,10 @@ import { AuthService } from '../../services/auth';
   styleUrl: './dashboard.scss',
 })
 export class DashboardComponent {
-  constructor(
-    private authService: AuthService,
-    private router: Router,
-  ) {}
+  authService = inject(AuthService);
+  currentUser = this.authService.currentUser;
 
-  onLogout() {
-    this.authService.logout().subscribe({
-      next: () => {
-        this.router.navigate(['/login']);
-      },
-      error: () => {
-        // Fallback cleanup if token is already invalidated
-        localStorage.removeItem('auth_token');
-        this.router.navigate(['/login']);
-      },
-    });
+  onLogout(): void {
+    this.authService.logout();
   }
 }

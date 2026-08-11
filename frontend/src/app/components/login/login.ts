@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../services/auth';
@@ -12,32 +12,31 @@ import { AuthService } from '../../services/auth';
   styleUrl: './login.scss',
 })
 export class LoginComponent {
-  credentials = {
-    email: '',
-    password: '',
-  };
+  private authService = inject(AuthService);
+  private router = inject(Router);
 
-  errorMessage: string = '';
-  isLoading: boolean = false;
+  email = '';
+  password = '';
+  errorMessage = signal<string | null>(null);
+  isLoading = signal<boolean>(false);
 
-  constructor(
-    private authService: AuthService,
-    private router: Router,
-  ) {}
+  onSubmit(): void {
+    if (!this.email || !this.password) {
+      this.errorMessage.set('Please enter both email and password.');
+      return;
+    }
 
-  onLogin() {
-    this.isLoading = true;
-    this.errorMessage = '';
+    this.isLoading.set(true);
+    this.errorMessage.set(null);
 
-    this.authService.login(this.credentials).subscribe({
-      next: (res) => {
-        this.isLoading = false;
-        console.log('Login successful', res);
+    this.authService.login({ email: this.email, password: this.password }).subscribe({
+      next: () => {
+        this.isLoading.set(false);
         this.router.navigate(['/dashboard']);
       },
       error: (err) => {
-        this.isLoading = false;
-        this.errorMessage = err.error?.message || 'Invalid email or password.';
+        this.isLoading.set(false);
+        this.errorMessage.set(err.error?.message || 'Login failed. Please check your credentials.');
       },
     });
   }
