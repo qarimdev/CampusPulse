@@ -10,6 +10,6 @@ export const authGuard: CanActivateFn = (route, state) => {
     return true;
   }
 
-  router.navigate(['/login']);
-  return false;
+  // Modern Angular practice: return UrlTree to redirect safely
+  return router.createUrlTree(['/login']);
 };

@@ -24,7 +24,7 @@
       <div class="stat-card">
         <span class="stat-icon">📚</span>
         <div class="stat-info">
-          <h3>4</h3>
+          <h3>{{ courses().length }}</h3>
           <p>Active Courses</p>
         </div>
       </div>
@@ -45,5 +45,32 @@
         </div>
       </div>
     </div>
+
+    <!-- Enrolled Courses Section -->
+    <section class="courses-section">
+      <h2>Enrolled Courses</h2>
+
+      @if (isLoading()) {
+        <p class="loading-text">Loading courses...</p>
+      } @else if (courses().length === 0) {
+        <p class="empty-text">No courses available at the moment.</p>
+      } @else {
+        <div class="courses-grid">
+          @for (course of courses(); track course.id) {
+            <div class="course-card">
+              <div class="card-header">
+                <span class="course-code">{{ course.code }}</span>
+                <span class="course-credits">{{ course.credits }} Credits</span>
+              </div>
+              <h3>{{ course.title }}</h3>
+              <p class="course-desc">{{ course.description }}</p>
+              <div class="card-footer">
+                <span>👨‍🏫 {{ course.instructor || 'TBA' }}</span>
+              </div>
+            </div>
+          }
+        </div>
+      }
+    </section>
   </main>
 </div>

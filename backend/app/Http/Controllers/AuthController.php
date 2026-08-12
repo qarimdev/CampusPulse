@@ -5,26 +5,26 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\ValidationException;
 
 class AuthController extends Controller
 {
-    // User Registration
+    // 1. REGISTER WITH STRICT VALIDATION
     public function register(Request $request)
     {
-        $fields = $request->validate([
+        $validatedData = $request->validate([
             'name'     => 'required|string|max:255',
-            'email'    => 'required|string|email|unique:users,email',
-            'password' => 'required|string|min:6|confirmed',
+            'email'    => 'required|string|email|max:255|unique:users',
+            'password' => 'required|string|min:8',
         ]);
 
         $user = User::create([
-            'name'     => $fields['name'],
-            'email'    => $fields['email'],
-            'password' => Hash::make($fields['password']),
+            'name'     => $validatedData['name'],
+            'email'    => $validatedData['email'],
+            'password' => Hash::make($validatedData['password']),
         ]);
 
-        $token = $user->createToken('campuspulse_token')->plainTextToken;
+        $token = $user->createToken('auth_token')->plainTextToken;
 
         return response()->json([
             'message' => 'User registered successfully',
@@ -33,20 +33,23 @@ class AuthController extends Controller
         ], 201);
     }
 
-    // User Login
+    // 2. LOGIN WITH CREDITIAL VALIDATION
     public function login(Request $request)
     {
-        $fields = $request->validate([
+        $credentials = $request->validate([
             'email'    => 'required|string|email',
             'password' => 'required|string',
         ]);
 
-        if (!Auth::attempt(['email' => $fields['email'], 'password' => $fields['password']])) {
-            return response()->json(['message' => 'Invalid credentials'], 401);
+        $user = User::where('email', $credentials['email'])->first();
+
+        if (!$user || !Hash::check($credentials['password'], $user->password)) {
+            throw ValidationException::withMessages([
+                'email' => ['The provided credentials do not match our records.'],
+            ]);
         }
 
-        $user  = User::where('email', $fields['email'])->firstOrFail();
-        $token = $user->createToken('campuspulse_token')->plainTextToken;
+        $token = $user->createToken('auth_token')->plainTextToken;
 
         return response()->json([
             'message' => 'Login successful',
@@ -55,11 +58,14 @@ class AuthController extends Controller
         ], 200);
     }
 
-    // User Logout
+    // 3. LOGOUT WITH TOKEN REVOCATION
     public function logout(Request $request)
     {
+        // Revokes ONLY the token that made this request
         $request->user()->currentAccessToken()->delete();
 
-        return response()->json(['message' => 'Logged out successfully'], 200);
+        return response()->json([
+            'message' => 'Successfully logged out',
+        ], 200);
     }
 }
