@@ -19,4 +19,5 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::apiResource('courses', CourseController::class);
     Route::apiResource('announcements', AnnouncementController::class);
+    Route::post('/courses/{id}/enroll', [CourseController::class, 'enroll']);
 });

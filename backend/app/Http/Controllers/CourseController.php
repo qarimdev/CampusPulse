@@ -8,9 +8,22 @@ use Illuminate\Http\Request;
 class CourseController extends Controller
 {
     // GET /api/courses
-    public function index()
+    public function index(Request $request)
     {
-        return response()->json(Course::all(), 200);
+        $user = $request->user();
+
+        // Pluck ONLY the IDs directly from the pivot table without loading full models
+        $enrolledIds = $user ? $user->courses()->pluck('courses.id')->toArray() : [];
+
+        // Retrieve courses without heavy relationships
+        $courses = Course::select(['id', 'code', 'title', 'description', 'instructor', 'credits'])
+            ->get()
+            ->map(function ($course) use ($enrolledIds) {
+                $course->is_enrolled = in_array($course->id, $enrolledIds);
+                return $course;
+            });
+
+        return response()->json($courses, 200);
     }
 
     // POST /api/courses
@@ -57,5 +70,21 @@ class CourseController extends Controller
         $course->delete();
 
         return response()->json(['message' => 'Course deleted successfully'], 200);
+    }
+
+    // POST /api/courses/{id}/enroll (Toggles enrollment on/off)
+    public function enroll(Request $request, $id)
+    {
+        $user = $request->user();
+        $course = Course::findOrFail($id);
+
+        // Toggle enrollment: attaches if not enrolled, detaches if already enrolled
+        $changes = $user->courses()->toggle($course->id);
+        $isEnrolled = count($changes['attached']) > 0;
+
+        return response()->json([
+            'message'     => $isEnrolled ? 'Enrolled successfully' : 'Unenrolled successfully',
+            'is_enrolled' => $isEnrolled,
+        ], 200);
     }
 }

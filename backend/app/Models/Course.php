@@ -16,4 +16,9 @@ class Course extends Model
         'instructor',
         'credits',
     ];
+
+    public function users()
+    {
+        return $this->belongsToMany(User::class)->withTimestamps();
+    }
 }

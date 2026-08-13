@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, OnInit, computed, inject, signal } from '@angular/core';
 import { Announcement, AnnouncementService } from '../../services/announcement';
 import { AuthService } from '../../services/auth';
 import { Course, CourseService } from '../../services/course';
@@ -18,10 +18,12 @@ export class DashboardComponent implements OnInit {
 
   currentUser = this.authService.currentUser;
   courses = signal<Course[]>([]);
-  isLoading = signal<boolean>(true);
   announcements = signal<Announcement[]>([]);
+
   isLoadingCourses = signal<boolean>(true);
   isLoadingAnnouncements = signal<boolean>(true);
+
+  enrolledCoursesCount = computed(() => this.courses().filter((c) => c.is_enrolled).length);
 
   ngOnInit(): void {
     this.fetchCourses();
@@ -29,19 +31,21 @@ export class DashboardComponent implements OnInit {
   }
 
   fetchCourses(): void {
+    this.isLoadingCourses.set(true);
     this.courseService.getCourses().subscribe({
       next: (data) => {
         this.courses.set(data);
-        this.isLoading.set(false);
+        this.isLoadingCourses.set(false); // Fix: Set isLoadingCourses instead of isLoading
       },
       error: (err) => {
         console.error('Failed to load courses', err);
-        this.isLoading.set(false);
+        this.isLoadingCourses.set(false);
       },
     });
   }
 
   fetchAnnouncements(): void {
+    this.isLoadingAnnouncements.set(true);
     this.announcementService.getAnnouncements().subscribe({
       next: (data) => {
         this.announcements.set(data);
@@ -50,6 +54,30 @@ export class DashboardComponent implements OnInit {
       error: (err) => {
         console.error('Failed to load announcements', err);
         this.isLoadingAnnouncements.set(false);
+      },
+    });
+  }
+
+  toggleEnroll(course: Course): void {
+    // Optimistic UI Update: Toggle state immediately so user sees instant feedback
+    const previousState = course.is_enrolled;
+    this.courses.update((list) =>
+      list.map((c) => (c.id === course.id ? { ...c, is_enrolled: !c.is_enrolled } : c)),
+    );
+
+    this.courseService.toggleEnrollment(course.id).subscribe({
+      next: (res) => {
+        // Sync exact backend state
+        this.courses.update((list) =>
+          list.map((c) => (c.id === course.id ? { ...c, is_enrolled: res.is_enrolled } : c)),
+        );
+      },
+      error: (err) => {
+        console.error('Failed to toggle enrollment', err);
+        // Revert on error
+        this.courses.update((list) =>
+          list.map((c) => (c.id === course.id ? { ...c, is_enrolled: previousState } : c)),
+        );
       },
     });
   }

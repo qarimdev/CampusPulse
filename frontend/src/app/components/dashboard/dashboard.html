@@ -24,8 +24,16 @@
       <div class="stat-card">
         <span class="stat-icon">📚</span>
         <div class="stat-info">
+          <h3>{{ enrolledCoursesCount() }}</h3>
+          <p>Enrolled Courses</p>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <span class="stat-icon">📖</span>
+        <div class="stat-info">
           <h3>{{ courses().length }}</h3>
-          <p>Active Courses</p>
+          <p>Total Available Courses</p>
         </div>
       </div>
 
@@ -75,9 +83,9 @@
       }
     </section>
 
-    <!-- Enrolled Courses Section -->
+    <!-- Courses Section -->
     <section class="courses-section">
-      <h2>Enrolled Courses</h2>
+      <h2>Available Courses</h2>
 
       @if (isLoadingCourses()) {
         <p class="loading-text">Loading courses...</p>
@@ -93,8 +101,16 @@
               </div>
               <h3>{{ course.title }}</h3>
               <p class="course-desc">{{ course.description }}</p>
+              
+              <!-- Footer with Enroll Button -->
               <div class="card-footer">
                 <span>👨‍🏫 {{ course.instructor || 'TBA' }}</span>
+                <button 
+                  class="btn-enroll" 
+                  [class.enrolled]="course.is_enrolled"
+                  (click)="toggleEnroll(course)">
+                  {{ course.is_enrolled ? '✓ Enrolled' : '+ Enroll' }}
+                </button>
               </div>
             </div>
           }

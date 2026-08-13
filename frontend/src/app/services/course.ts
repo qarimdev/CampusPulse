@@ -9,6 +9,7 @@ export interface Course {
   description?: string;
   instructor?: string;
   credits: number;
+  is_enrolled?: boolean;
 }
 
 @Injectable({
@@ -20,5 +21,12 @@ export class CourseService {
 
   getCourses(): Observable<Course[]> {
     return this.http.get<Course[]>(this.apiUrl);
+  }
+
+  toggleEnrollment(courseId: number): Observable<{ message: string; is_enrolled: boolean }> {
+    return this.http.post<{ message: string; is_enrolled: boolean }>(
+      `${this.apiUrl}/${courseId}/enroll`,
+      {},
+    );
   }
 }
