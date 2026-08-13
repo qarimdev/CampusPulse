@@ -30,10 +30,10 @@
       </div>
 
       <div class="stat-card">
-        <span class="stat-icon">📅</span>
+        <span class="stat-icon">📢</span>
         <div class="stat-info">
-          <h3>2</h3>
-          <p>Upcoming Events</p>
+          <h3>{{ announcements().length }}</h3>
+          <p>Campus Announcements</p>
         </div>
       </div>
 
@@ -46,11 +46,40 @@
       </div>
     </div>
 
+    <!-- Campus Announcements Section -->
+    <section class="announcements-section">
+      <h2>Campus Announcements 📢</h2>
+
+      @if (isLoadingAnnouncements()) {
+        <p class="loading-text">Loading announcements...</p>
+      } @else if (announcements().length === 0) {
+        <p class="empty-text">No announcements posted yet.</p>
+      } @else {
+        <div class="announcements-list">
+          @for (item of announcements(); track item.id) {
+            <div class="announcement-card" [class.important]="item.is_important">
+              <div class="announcement-header">
+                <div class="badges">
+                  <span class="badge-category">{{ item.category }}</span>
+                  @if (item.is_important) {
+                    <span class="badge-important">🔥 Urgent</span>
+                  }
+                </div>
+                <span class="announcement-date">{{ item.created_at | date:'shortDate' }}</span>
+              </div>
+              <h3>{{ item.title }}</h3>
+              <p>{{ item.content }}</p>
+            </div>
+          }
+        </div>
+      }
+    </section>
+
     <!-- Enrolled Courses Section -->
     <section class="courses-section">
       <h2>Enrolled Courses</h2>
 
-      @if (isLoading()) {
+      @if (isLoadingCourses()) {
         <p class="loading-text">Loading courses...</p>
       } @else if (courses().length === 0) {
         <p class="empty-text">No courses available at the moment.</p>
