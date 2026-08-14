@@ -1,0 +1,63 @@
+import { CommonModule } from '@angular/common';
+import { Component, OnInit, computed, inject, signal } from '@angular/core';
+import { Router, RouterLink } from '@angular/router';
+import { AuthService } from '../../services/auth';
+import { Course, CourseService } from '../../services/course';
+
+@Component({
+  selector: 'app-profile',
+  standalone: true,
+  imports: [CommonModule, RouterLink],
+  templateUrl: './profile.html',
+  styleUrl: './profile.scss',
+})
+export class ProfileComponent implements OnInit {
+  private authService = inject(AuthService);
+  private courseService = inject(CourseService);
+  private router = inject(Router);
+
+  currentUser = this.authService.currentUser;
+  courses = signal<Course[]>([]);
+  isLoading = signal<boolean>(true);
+
+  // Filter only enrolled courses
+  enrolledCourses = computed(() => this.courses().filter((course) => course.is_enrolled));
+
+  // Compute total credits enrolled
+  totalCredits = computed(() =>
+    this.enrolledCourses().reduce((sum, course) => sum + course.credits, 0),
+  );
+
+  ngOnInit(): void {
+    this.fetchCourses();
+  }
+
+  fetchCourses(): void {
+    this.courseService.getCourses().subscribe({
+      next: (data) => {
+        this.courses.set(data);
+        this.isLoading.set(false);
+      },
+      error: (err) => {
+        console.error('Failed to load user courses', err);
+        this.isLoading.set(false);
+      },
+    });
+  }
+
+  dropCourse(course: Course): void {
+    this.courseService.toggleEnrollment(course.id).subscribe({
+      next: () => {
+        // Update local list reactively
+        this.courses.update((list) =>
+          list.map((c) => (c.id === course.id ? { ...c, is_enrolled: false } : c)),
+        );
+      },
+      error: (err) => console.error('Failed to drop course', err),
+    });
+  }
+
+  onLogout(): void {
+    this.authService.logout().subscribe();
+  }
+}

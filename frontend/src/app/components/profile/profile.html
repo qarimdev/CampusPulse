@@ -1,0 +1,72 @@
+<div class="profile-layout">
+  <!-- Top Navbar -->
+  <header class="navbar">
+    <div class="brand">
+      <span class="logo-icon">⚡</span>
+      <span class="logo-text">CampusPulse</span>
+    </div>
+
+    <div class="nav-links">
+      <a routerLink="/dashboard" class="nav-btn">📊 Dashboard</a>
+      <button class="btn-logout" (click)="onLogout()">Logout</button>
+    </div>
+  </header>
+
+  <main class="main-content">
+    <!-- Student Header Info Card -->
+    <section class="user-card">
+      <div class="avatar-circle">
+        <span>{{ currentUser()?.name?.charAt(0) || 'S' }}</span>
+      </div>
+      <div class="user-details">
+        <h1>{{ currentUser()?.name }}</h1>
+        <p class="email">✉️ {{ currentUser()?.email }}</p>
+        <span class="badge-role">Student</span>
+      </div>
+    </section>
+
+    <!-- Enrolled Summary Stats -->
+    <div class="stats-row">
+      <div class="stat-box">
+        <h3>{{ enrolledCourses().length }}</h3>
+        <p>Enrolled Subjects</p>
+      </div>
+      <div class="stat-box">
+        <h3>{{ totalCredits() }}</h3>
+        <p>Total Credits</p>
+      </div>
+    </div>
+
+    <!-- Enrolled Courses List -->
+    <section class="enrolled-section">
+      <h2>My Enrolled Schedule 📅</h2>
+
+      @if (isLoading()) {
+        <p class="loading-text">Loading schedule...</p>
+      } @else if (enrolledCourses().length === 0) {
+        <div class="empty-state">
+          <p>You haven't enrolled in any courses yet.</p>
+          <a routerLink="/dashboard" class="btn-browse">Browse Available Courses</a>
+        </div>
+      } @else {
+        <div class="schedule-list">
+          @for (course of enrolledCourses(); track course.id) {
+            <div class="schedule-card">
+              <div class="course-main">
+                <span class="code">{{ course.code }}</span>
+                <div>
+                  <h3>{{ course.title }}</h3>
+                  <p class="instructor">👨‍🏫 {{ course.instructor || 'TBA' }}</p>
+                </div>
+              </div>
+              <div class="course-meta">
+                <span class="credits">{{ course.credits }} Credits</span>
+                <button class="btn-drop" (click)="dropCourse(course)">Drop Course</button>
+              </div>
+            </div>
+          }
+        </div>
+      }
+    </section>
+  </main>
+</div>

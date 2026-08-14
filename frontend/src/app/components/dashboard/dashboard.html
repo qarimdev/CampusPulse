@@ -7,8 +7,10 @@
     </div>
 
     <div class="user-menu">
-      <span class="user-name">Welcome, {{ currentUser()?.name || 'Student' }}</span>
-      <button class="btn-logout" (click)="onLogout()">Logout</button>
+      <a routerLink="/profile" class="user-profile-link">
+        👤 Welcome, {{ currentUser()?.name || 'Student' }}
+      </a>
+  <button class="btn-logout" (click)="onLogout()">Logout</button>
     </div>
   </header>
 
