@@ -83,17 +83,30 @@
       }
     </section>
 
-    <!-- Courses Section -->
+<!-- Courses Section -->
     <section class="courses-section">
-      <h2>Available Courses</h2>
+      <div class="courses-header">
+        <h2>Available Courses</h2>
+        
+        <!-- Search Input -->
+        <div class="search-box">
+          <span class="search-icon">🔍</span>
+          <input 
+            type="text" 
+            placeholder="Search by code, title, or instructor..." 
+            [ngModel]="searchTerm()" 
+            (ngModelChange)="searchTerm.set($event)" 
+          />
+        </div>
+      </div>
 
       @if (isLoadingCourses()) {
         <p class="loading-text">Loading courses...</p>
-      } @else if (courses().length === 0) {
-        <p class="empty-text">No courses available at the moment.</p>
+      } @else if (filteredCourses().length === 0) {
+        <p class="empty-text">No matching courses found.</p>
       } @else {
         <div class="courses-grid">
-          @for (course of courses(); track course.id) {
+          @for (course of filteredCourses(); track course.id) {
             <div class="course-card">
               <div class="card-header">
                 <span class="course-code">{{ course.code }}</span>
@@ -102,7 +115,6 @@
               <h3>{{ course.title }}</h3>
               <p class="course-desc">{{ course.description }}</p>
               
-              <!-- Footer with Enroll Button -->
               <div class="card-footer">
                 <span>👨‍🏫 {{ course.instructor || 'TBA' }}</span>
                 <button 

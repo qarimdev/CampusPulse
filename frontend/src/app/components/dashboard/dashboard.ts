@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit, computed, inject, signal } from '@angular/core';
+import { FormsModule } from '@angular/forms'; // <-- Import FormsModule
 import { Announcement, AnnouncementService } from '../../services/announcement';
 import { AuthService } from '../../services/auth';
 import { Course, CourseService } from '../../services/course';
@@ -7,7 +8,7 @@ import { Course, CourseService } from '../../services/course';
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule], // <-- Add FormsModule here
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.scss',
 })
@@ -23,7 +24,24 @@ export class DashboardComponent implements OnInit {
   isLoadingCourses = signal<boolean>(true);
   isLoadingAnnouncements = signal<boolean>(true);
 
+  // Search filter signal
+  searchTerm = signal<string>('');
+
+  // Computes active enrolled count
   enrolledCoursesCount = computed(() => this.courses().filter((c) => c.is_enrolled).length);
+
+  // Computes filtered course list based on search term (title or code)
+  filteredCourses = computed(() => {
+    const term = this.searchTerm().toLowerCase().trim();
+    if (!term) return this.courses();
+
+    return this.courses().filter(
+      (course) =>
+        course.title.toLowerCase().includes(term) ||
+        course.code.toLowerCase().includes(term) ||
+        (course.instructor && course.instructor.toLowerCase().includes(term)),
+    );
+  });
 
   ngOnInit(): void {
     this.fetchCourses();
@@ -35,7 +53,7 @@ export class DashboardComponent implements OnInit {
     this.courseService.getCourses().subscribe({
       next: (data) => {
         this.courses.set(data);
-        this.isLoadingCourses.set(false); // Fix: Set isLoadingCourses instead of isLoading
+        this.isLoadingCourses.set(false);
       },
       error: (err) => {
         console.error('Failed to load courses', err);
@@ -59,7 +77,6 @@ export class DashboardComponent implements OnInit {
   }
 
   toggleEnroll(course: Course): void {
-    // Optimistic UI Update: Toggle state immediately so user sees instant feedback
     const previousState = course.is_enrolled;
     this.courses.update((list) =>
       list.map((c) => (c.id === course.id ? { ...c, is_enrolled: !c.is_enrolled } : c)),
@@ -67,14 +84,12 @@ export class DashboardComponent implements OnInit {
 
     this.courseService.toggleEnrollment(course.id).subscribe({
       next: (res) => {
-        // Sync exact backend state
         this.courses.update((list) =>
           list.map((c) => (c.id === course.id ? { ...c, is_enrolled: res.is_enrolled } : c)),
         );
       },
       error: (err) => {
         console.error('Failed to toggle enrollment', err);
-        // Revert on error
         this.courses.update((list) =>
           list.map((c) => (c.id === course.id ? { ...c, is_enrolled: previousState } : c)),
         );
