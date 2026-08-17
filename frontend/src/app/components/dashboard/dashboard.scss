@@ -33,10 +33,15 @@
     align-items: center;
     gap: 1rem;
 
-    .user-name {
+    .user-profile-link {
       font-size: 0.9rem;
       font-weight: 600;
       color: #334155;
+      text-decoration: none;
+
+      &:hover {
+        color: #4338ca;
+      }
     }
 
     .btn-logout {
@@ -115,7 +120,6 @@
   }
 }
 
-/* Campus Announcements Section */
 .announcements-section {
   margin-top: 2.5rem;
 
@@ -200,7 +204,6 @@
   }
 }
 
-/* Enrolled / Available Courses Section */
 .courses-section {
   margin-top: 2.5rem;
 
@@ -274,6 +277,13 @@
       display: flex;
       flex-direction: column;
       justify-content: space-between;
+      cursor: pointer;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+      &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+      }
 
       .card-header {
         display: flex;
@@ -319,35 +329,166 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
+      }
+    }
+  }
+}
 
-        .btn-enroll {
-          padding: 0.35rem 0.85rem;
-          font-size: 0.8rem;
-          font-weight: 600;
-          border-radius: 6px;
-          cursor: pointer;
-          border: 1px solid #6366f1;
-          background-color: #6366f1;
-          color: #ffffff;
-          transition: all 0.2s ease;
+/* Shared Button Styles */
+.btn-enroll {
+  padding: 0.35rem 0.85rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  border-radius: 6px;
+  cursor: pointer;
+  border: 1px solid #6366f1;
+  background-color: #6366f1;
+  color: #ffffff;
+  transition: all 0.2s ease;
 
-          &:hover {
-            background-color: #4f46e5;
-          }
+  &:hover {
+    background-color: #4f46e5;
+  }
 
-          &.enrolled {
-            background-color: #ecfdf5;
-            color: #059669;
-            border-color: #a7f3d0;
+  &.enrolled {
+    background-color: #ecfdf5;
+    color: #059669;
+    border-color: #a7f3d0;
 
-            &:hover {
-              background-color: #fee2e2;
-              color: #dc2626;
-              border-color: #fca5a5;
-            }
-          }
+    &:hover {
+      background-color: #fee2e2;
+      color: #dc2626;
+      border-color: #fca5a5;
+    }
+  }
+}
+
+/* Modal Overlay Styles */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(15, 23, 42, 0.4);
+  backdrop-filter: blur(4px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  padding: 1rem;
+
+  .modal-card {
+    background-color: #ffffff;
+    width: 100%;
+    max-width: 520px;
+    border-radius: 16px;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    overflow: hidden;
+    animation: modalSlideUp 0.2s ease-out;
+
+    .modal-header {
+      padding: 1.25rem 1.5rem;
+      border-bottom: 1px solid #e2e8f0;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+
+      .modal-title-group {
+        .course-code {
+          background-color: #e0e7ff;
+          color: #4338ca;
+          font-size: 0.75rem;
+          font-weight: 700;
+          padding: 0.2rem 0.5rem;
+          border-radius: 4px;
+        }
+
+        h2 {
+          margin: 0.5rem 0 0;
+          font-size: 1.35rem;
+          color: #0f172a;
+        }
+      }
+
+      .btn-close {
+        background: none;
+        border: none;
+        font-size: 1.2rem;
+        color: #94a3b8;
+        cursor: pointer;
+        padding: 0.25rem;
+
+        &:hover {
+          color: #0f172a;
         }
       }
     }
+
+    .modal-body {
+      padding: 1.5rem;
+
+      .meta-pills {
+        display: flex;
+        gap: 0.75rem;
+        margin-bottom: 1.25rem;
+
+        .pill {
+          background-color: #f1f5f9;
+          color: #334155;
+          font-size: 0.8rem;
+          font-weight: 600;
+          padding: 0.3rem 0.6rem;
+          border-radius: 6px;
+        }
+      }
+
+      h4 {
+        margin: 0 0 0.5rem;
+        font-size: 0.9rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: #64748b;
+      }
+
+      p {
+        margin: 0;
+        color: #334155;
+        line-height: 1.6;
+        font-size: 0.95rem;
+      }
+    }
+
+    .modal-footer {
+      padding: 1rem 1.5rem;
+      background-color: #f8fafc;
+      border-top: 1px solid #e2e8f0;
+      display: flex;
+      justify-content: flex-end;
+      gap: 0.75rem;
+
+      .btn-secondary {
+        padding: 0.35rem 0.85rem;
+        font-size: 0.8rem;
+        font-weight: 600;
+        border-radius: 6px;
+        cursor: pointer;
+        background-color: #ffffff;
+        color: #475569;
+        border: 1px solid #cbd5e1;
+
+        &:hover {
+          background-color: #f1f5f9;
+        }
+      }
+    }
+  }
+}
+
+@keyframes modalSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }

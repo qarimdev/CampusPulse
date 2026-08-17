@@ -98,6 +98,17 @@ export class DashboardComponent implements OnInit {
     });
   }
 
+  // Add selectedCourse signal
+  selectedCourse = signal<Course | null>(null);
+
+  openCourseDetails(course: Course): void {
+    this.selectedCourse.set(course);
+  }
+
+  closeCourseDetails(): void {
+    this.selectedCourse.set(null);
+  }
+
   onLogout(): void {
     this.authService.logout().subscribe();
   }

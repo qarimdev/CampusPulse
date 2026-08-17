@@ -10,7 +10,7 @@
       <a routerLink="/profile" class="user-profile-link">
         👤 Welcome, {{ currentUser()?.name || 'Student' }}
       </a>
-  <button class="btn-logout" (click)="onLogout()">Logout</button>
+      <button class="btn-logout" (click)="onLogout()">Logout</button>
     </div>
   </header>
 
@@ -85,7 +85,7 @@
       }
     </section>
 
-<!-- Courses Section -->
+    <!-- Courses Section -->
     <section class="courses-section">
       <div class="courses-header">
         <h2>Available Courses</h2>
@@ -109,7 +109,7 @@
       } @else {
         <div class="courses-grid">
           @for (course of filteredCourses(); track course.id) {
-            <div class="course-card">
+            <div class="course-card" (click)="openCourseDetails(course)">
               <div class="card-header">
                 <span class="course-code">{{ course.code }}</span>
                 <span class="course-credits">{{ course.credits }} Credits</span>
@@ -117,7 +117,7 @@
               <h3>{{ course.title }}</h3>
               <p class="course-desc">{{ course.description }}</p>
               
-              <div class="card-footer">
+              <div class="card-footer" (click)="$event.stopPropagation()">
                 <span>👨‍🏫 {{ course.instructor || 'TBA' }}</span>
                 <button 
                   class="btn-enroll" 
@@ -132,4 +132,39 @@
       }
     </section>
   </main>
+
+  <!-- Course Details Modal -->
+  @if (selectedCourse(); as course) {
+    <div class="modal-backdrop" (click)="closeCourseDetails()">
+      <div class="modal-card" (click)="$event.stopPropagation()">
+        <header class="modal-header">
+          <div class="modal-title-group">
+            <span class="course-code">{{ course.code }}</span>
+            <h2>{{ course.title }}</h2>
+          </div>
+          <button class="btn-close" (click)="closeCourseDetails()">✕</button>
+        </header>
+
+        <div class="modal-body">
+          <div class="meta-pills">
+            <span class="pill">💳 {{ course.credits }} Credits</span>
+            <span class="pill">👨‍🏫 Instructor: {{ course.instructor || 'TBA' }}</span>
+          </div>
+
+          <h4>Course Description</h4>
+          <p>{{ course.description }}</p>
+        </div>
+
+        <footer class="modal-footer">
+          <button class="btn-secondary" (click)="closeCourseDetails()">Close</button>
+          <button 
+            class="btn-enroll" 
+            [class.enrolled]="course.is_enrolled"
+            (click)="toggleEnroll(course)">
+            {{ course.is_enrolled ? '✓ Enrolled' : '+ Enroll' }}
+          </button>
+        </footer>
+      </div>
+    </div>
+  }
 </div>
