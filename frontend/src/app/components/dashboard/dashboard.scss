@@ -11,6 +11,7 @@
   padding: 1rem 2rem;
   background-color: #ffffff;
   border-bottom: 1px solid #e2e8f0;
+  position: relative;
 
   .brand {
     display: flex;
@@ -26,6 +27,17 @@
       font-weight: 700;
       color: #0f172a;
     }
+  }
+
+  /* Hide toggle button on desktop */
+  .mobile-menu-toggle {
+    display: none;
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    color: #334155;
+    cursor: pointer;
+    padding: 0.25rem 0.5rem;
   }
 
   .user-menu {
@@ -56,6 +68,39 @@
 
       &:hover {
         background-color: #fef2f2;
+      }
+    }
+  }
+
+  /* Mobile Breakpoint */
+  @media (max-width: 768px) {
+    padding: 1rem 1.25rem;
+
+    .mobile-menu-toggle {
+      display: block;
+    }
+
+    .user-menu {
+      display: none;
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      background-color: #ffffff;
+      flex-direction: column;
+      align-items: flex-start;
+      padding: 1rem 1.5rem;
+      border-bottom: 1px solid #e2e8f0;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+      z-index: 50;
+
+      &.open {
+        display: flex;
+      }
+
+      .btn-logout {
+        width: 100%;
+        text-align: center;
       }
     }
   }

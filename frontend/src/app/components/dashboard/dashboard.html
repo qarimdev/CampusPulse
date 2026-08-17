@@ -6,8 +6,14 @@
       <span class="logo-text">CampusPulse</span>
     </div>
 
-    <div class="user-menu">
-      <a routerLink="/profile" class="user-profile-link">
+    <!-- Mobile Hamburger Toggle -->
+    <button class="mobile-menu-toggle" (click)="toggleMobileMenu()" aria-label="Toggle navigation">
+      {{ isMobileMenuOpen() ? '✕' : '☰' }}
+    </button>
+
+    <!-- User Navigation Menu -->
+    <div class="user-menu" [class.open]="isMobileMenuOpen()">
+      <a routerLink="/profile" class="user-profile-link" (click)="closeMobileMenu()">
         👤 Welcome, {{ currentUser()?.name || 'Student' }}
       </a>
       <button class="btn-logout" (click)="onLogout()">Logout</button>
@@ -118,7 +124,7 @@
               <p class="course-desc">{{ course.description }}</p>
               
               <div class="card-footer" (click)="$event.stopPropagation()">
-                <span>👨‍🏫 {{ course.instructor || 'TBA' }}</span>
+                <span class="instructor-name">👨‍🏫 {{ course.instructor || 'TBA' }}</span>
                 <button 
                   class="btn-enroll" 
                   [class.enrolled]="course.is_enrolled"

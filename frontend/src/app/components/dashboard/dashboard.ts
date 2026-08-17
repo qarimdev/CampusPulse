@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit, computed, inject, signal } from '@angular/core';
-import { FormsModule } from '@angular/forms'; // <-- Import FormsModule
+import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { Announcement, AnnouncementService } from '../../services/announcement';
 import { AuthService } from '../../services/auth';
@@ -28,6 +28,9 @@ export class DashboardComponent implements OnInit {
   // Search filter signal
   searchTerm = signal<string>('');
 
+  // Mobile navigation state
+  isMobileMenuOpen = signal<boolean>(false);
+
   // Computes active enrolled count
   enrolledCoursesCount = computed(() => this.courses().filter((c) => c.is_enrolled).length);
 
@@ -47,6 +50,14 @@ export class DashboardComponent implements OnInit {
   ngOnInit(): void {
     this.fetchCourses();
     this.fetchAnnouncements();
+  }
+
+  toggleMobileMenu(): void {
+    this.isMobileMenuOpen.update((open) => !open);
+  }
+
+  closeMobileMenu(): void {
+    this.isMobileMenuOpen.set(false);
   }
 
   fetchCourses(): void {
@@ -98,7 +109,7 @@ export class DashboardComponent implements OnInit {
     });
   }
 
-  // Add selectedCourse signal
+  // Selected course signal for modal
   selectedCourse = signal<Course | null>(null);
 
   openCourseDetails(course: Course): void {
