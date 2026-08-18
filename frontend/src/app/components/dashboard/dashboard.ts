@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit, computed, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { RouterLink } from '@angular/router';
+import { ActivatedRoute, Params, Router, RouterLink } from '@angular/router';
 import { Announcement, AnnouncementService } from '../../services/announcement';
 import { AuthService } from '../../services/auth';
 import { Course, CourseService } from '../../services/course';
@@ -19,6 +19,8 @@ export class DashboardComponent implements OnInit {
   private authService = inject(AuthService);
   private courseService = inject(CourseService);
   private announcementService = inject(AnnouncementService);
+  private router = inject(Router);
+  private route = inject(ActivatedRoute);
 
   currentUser = this.authService.currentUser;
   courses = signal<Course[]>([]);
@@ -34,6 +36,12 @@ export class DashboardComponent implements OnInit {
 
   // Mobile navigation state
   isMobileMenuOpen = signal<boolean>(false);
+
+  // Selected course signal for modal
+  selectedCourse = signal<Course | null>(null);
+
+  // Debounce timer reference
+  private searchDebounceTimer: ReturnType<typeof setTimeout> | null = null;
 
   // Computes active enrolled count
   enrolledCoursesCount = computed(() => this.courses().filter((c) => c.is_enrolled).length);
@@ -83,6 +91,19 @@ export class DashboardComponent implements OnInit {
   ngOnInit(): void {
     this.fetchCourses();
     this.fetchAnnouncements();
+
+    // Read initial URL params into state
+    this.route.queryParams.subscribe((params: Params) => {
+      if (params['category']) {
+        this.selectedCategory.set(params['category']);
+      }
+      if (params['search'] !== undefined) {
+        this.searchTerm.set(params['search']);
+      }
+      if (params['sort']) {
+        this.selectedSort.set(params['sort'] as SortOption);
+      }
+    });
   }
 
   toggleMobileMenu(): void {
@@ -93,13 +114,42 @@ export class DashboardComponent implements OnInit {
     this.isMobileMenuOpen.set(false);
   }
 
+  onSearchChange(term: string): void {
+    this.searchTerm.set(term);
+
+    // Debounce updating URL to avoid lagging while typing
+    if (this.searchDebounceTimer) {
+      clearTimeout(this.searchDebounceTimer);
+    }
+    this.searchDebounceTimer = setTimeout(() => {
+      this.syncParamsToUrl();
+    }, 300);
+  }
+
   onCategoryChange(category: string): void {
     this.selectedCategory.set(category);
+    this.syncParamsToUrl();
   }
 
   onSortChange(event: Event): void {
     const value = (event.target as HTMLSelectElement).value as SortOption;
     this.selectedSort.set(value);
+    this.syncParamsToUrl();
+  }
+
+  private syncParamsToUrl(): void {
+    const queryParams: Params = {
+      category: this.selectedCategory() !== 'all' ? this.selectedCategory() : null,
+      search: this.searchTerm().trim() ? this.searchTerm().trim() : null,
+      sort: this.selectedSort() !== 'title-asc' ? this.selectedSort() : null,
+    };
+
+    this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams,
+      queryParamsHandling: 'merge',
+      replaceUrl: true,
+    });
   }
 
   fetchCourses(): void {
@@ -132,27 +182,37 @@ export class DashboardComponent implements OnInit {
 
   toggleEnroll(course: Course): void {
     const previousState = course.is_enrolled;
+
+    // Optimistic UI update for main list
     this.courses.update((list) =>
       list.map((c) => (c.id === course.id ? { ...c, is_enrolled: !c.is_enrolled } : c)),
     );
+
+    // Sync selected modal course if active
+    if (this.selectedCourse()?.id === course.id) {
+      this.selectedCourse.update((c) => (c ? { ...c, is_enrolled: !c.is_enrolled } : null));
+    }
 
     this.courseService.toggleEnrollment(course.id).subscribe({
       next: (res) => {
         this.courses.update((list) =>
           list.map((c) => (c.id === course.id ? { ...c, is_enrolled: res.is_enrolled } : c)),
         );
+        if (this.selectedCourse()?.id === course.id) {
+          this.selectedCourse.update((c) => (c ? { ...c, is_enrolled: res.is_enrolled } : null));
+        }
       },
       error: (err) => {
         console.error('Failed to toggle enrollment', err);
         this.courses.update((list) =>
           list.map((c) => (c.id === course.id ? { ...c, is_enrolled: previousState } : c)),
         );
+        if (this.selectedCourse()?.id === course.id) {
+          this.selectedCourse.update((c) => (c ? { ...c, is_enrolled: previousState } : null));
+        }
       },
     });
   }
-
-  // Selected course signal for modal
-  selectedCourse = signal<Course | null>(null);
 
   openCourseDetails(course: Course): void {
     this.selectedCourse.set(course);

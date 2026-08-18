@@ -107,7 +107,7 @@
               type="text" 
               placeholder="Search code, title, instructor..." 
               [ngModel]="searchTerm()" 
-              (ngModelChange)="searchTerm.set($event)" 
+              (ngModelChange)="onSearchChange($event)" 
             />
           </div>
 
