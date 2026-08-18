@@ -13,6 +13,7 @@
 
     <!-- User Navigation Menu -->
     <div class="user-menu" [class.open]="isMobileMenuOpen()">
+      <a routerLink="/planner" class="nav-link" (click)="closeMobileMenu()" style="margin-right: 1rem; text-decoration: none;">📅 Planner</a>
       <a routerLink="/profile" class="user-profile-link" (click)="closeMobileMenu()">
         👤 Welcome, {{ currentUser()?.name || 'Student' }}
       </a>
@@ -62,8 +63,13 @@
       </div>
     </div>
 
+    <!-- Course Planner Section -->
+    <section class="planner-section" style="margin-top: 2rem;">
+      <app-course-planner />
+    </section>
+
     <!-- Campus Announcements Section -->
-    <section class="announcements-section">
+    <section class="announcements-section" style="margin-top: 2rem;">
       <h2>Campus Announcements 📢</h2>
 
       @if (isLoadingAnnouncements()) {

@@ -5,13 +5,14 @@ import { ActivatedRoute, Params, Router, RouterLink } from '@angular/router';
 import { Announcement, AnnouncementService } from '../../services/announcement';
 import { AuthService } from '../../services/auth';
 import { Course, CourseService } from '../../services/course';
+import { CoursePlannerComponent } from '../course-planner/course-planner';
 
 export type SortOption = 'title-asc' | 'title-desc' | 'credits-high' | 'credits-low';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink],
+  imports: [CommonModule, FormsModule, RouterLink, CoursePlannerComponent],
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.scss',
 })

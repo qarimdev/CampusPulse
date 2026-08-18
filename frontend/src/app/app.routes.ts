@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+import { CoursePlannerComponent } from './components/course-planner/course-planner';
 import { DashboardComponent } from './components/dashboard/dashboard';
 import { LoginComponent } from './components/login/login';
 import { ProfileComponent } from './components/profile/profile';
@@ -10,6 +11,6 @@ export const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
   { path: 'dashboard', component: DashboardComponent, canActivate: [authGuard] },
-  { path: 'profile', component: ProfileComponent, canActivate: [authGuard] }, // <-- Add this
-  { path: '**', redirectTo: 'dashboard' },
+  { path: 'profile', component: ProfileComponent, canActivate: [authGuard] },
+  { path: 'planner', component: CoursePlannerComponent, canActivate: [authGuard] },
 ];

@@ -1,0 +1,180 @@
+.planner-container {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  padding: 1.5rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+
+  .planner-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #e2e8f0;
+    padding-bottom: 1.25rem;
+    margin-bottom: 1.5rem;
+
+    h2 { margin: 0; font-size: 1.35rem; color: #0f172a; }
+    p { margin: 0.25rem 0 0; font-size: 0.875rem; color: #64748b; }
+
+    .credit-meter {
+      text-align: right;
+      min-width: 180px;
+
+      .credit-count { font-size: 0.875rem; font-weight: 700; color: #0f172a; }
+
+      .progress-bar {
+        height: 8px;
+        background-color: #f8fafc;
+        border-radius: 4px;
+        overflow: hidden;
+        margin-top: 0.35rem;
+
+        .progress-fill {
+          height: 100%;
+          background-color: #6366f1;
+          transition: width 0.3s ease;
+
+          &.warning { background-color: #f59e0b; }
+        }
+      }
+    }
+  }
+
+  .planner-grid {
+    display: grid;
+    grid-template-columns: 320px 1fr;
+    gap: 1.5rem;
+
+    @media (max-width: 900px) {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .catalog-panel {
+    .course-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      max-height: 520px;
+      overflow-y: auto;
+    }
+
+    .planner-card {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      padding: 0.85rem;
+      transition: all 0.2s ease;
+
+      &.selected {
+        border-color: #6366f1;
+        background: #e0e7ff;
+      }
+
+      &.disabled-conflict {
+        opacity: 0.6;
+        background: #f1f5f9;
+      }
+
+      .card-top {
+        display: flex;
+        justify-content: space-between;
+        font-size: 0.75rem;
+        font-weight: 700;
+        margin-bottom: 0.25rem;
+
+        .code { color: #4338ca; }
+        .credits { color: #64748b; }
+      }
+
+      h4 { margin: 0 0 0.25rem; font-size: 0.95rem; color: #0f172a; }
+      .schedule { margin: 0 0 0.5rem; font-size: 0.8rem; color: #64748b; }
+
+      .conflict-tag {
+        display: inline-block;
+        font-size: 0.7rem;
+        font-weight: 700;
+        color: #dc2626;
+        margin-bottom: 0.5rem;
+      }
+
+      .btn-toggle {
+        width: 100%;
+        padding: 0.35rem;
+        font-size: 0.8rem;
+        font-weight: 600;
+        border-radius: 6px;
+        border: 1px solid #6366f1;
+        background: #ffffff;
+        color: #6366f1;
+        cursor: pointer;
+
+        &.selected {
+          background: #fef2f2;
+          border-color: #fecaca;
+          color: #dc2626;
+        }
+
+        &:disabled {
+          cursor: not-allowed;
+          border-color: #e2e8f0;
+          color: #94a3b8;
+        }
+      }
+    }
+  }
+
+  .timetable-panel {
+    .timetable-grid {
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      overflow: hidden;
+
+      .grid-header {
+        display: grid;
+        grid-template-columns: 60px repeat(5, 1fr);
+        background: #f8fafc;
+        border-bottom: 1px solid #e2e8f0;
+        font-size: 0.8rem;
+        font-weight: 700;
+        text-align: center;
+        padding: 0.5rem 0;
+      }
+
+      .time-row {
+        display: grid;
+        grid-template-columns: 60px repeat(5, 1fr);
+        border-bottom: 1px solid #e2e8f0;
+        min-height: 60px;
+
+        &:last-child { border-bottom: none; }
+
+        .time-label {
+          font-size: 0.75rem;
+          color: #64748b;
+          padding: 0.25rem;
+          text-align: center;
+          border-right: 1px solid #e2e8f0;
+        }
+
+        .slot-cell {
+          border-right: 1px solid #e2e8f0;
+          padding: 0.2rem;
+          &:last-child { border-right: none; }
+
+          .scheduled-block {
+            background: #6366f1;
+            color: #fff;
+            padding: 0.25rem;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            height: 100%;
+
+            strong { display: block; }
+            span { font-size: 0.65rem; opacity: 0.9; }
+          }
+        }
+      }
+    }
+  }
+}

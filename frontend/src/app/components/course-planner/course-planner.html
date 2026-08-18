@@ -1,0 +1,85 @@
+<div class="planner-container">
+  <div class="planner-header">
+    <div>
+      <h2>Course Registration & Schedule Planner</h2>
+      <p>Select courses to build your weekly timetable without schedule overlaps.</p>
+    </div>
+    <div class="credit-meter">
+      <span class="credit-count">{{ totalCredits }} / {{ maxCredits }} Credits</span>
+      <div class="progress-bar">
+        <div 
+          class="progress-fill" 
+          [class.warning]="totalCredits > 15"
+          [style.width.%]="(totalCredits / maxCredits) * 100"
+        ></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="planner-grid">
+    <!-- Course Catalog -->
+    <div class="catalog-panel">
+      <h3>Available Courses</h3>
+      <div class="course-list">
+        @for (course of availableCourses; track course.id) {
+          <div 
+            class="planner-card" 
+            [class.selected]="isSelected(course.id)"
+            [class.disabled-conflict]="isConflicting(course)"
+          >
+            <div class="card-top">
+              <span class="code">{{ course.code }}</span>
+              <span class="credits">{{ course.credits }} Credits</span>
+            </div>
+            <h4>{{ course.title }}</h4>
+            <p class="schedule">{{ course.days.join(', ') }} • {{ course.startTime }} - {{ course.endTime }}</p>
+
+            @if (isConflicting(course)) {
+              <span class="conflict-tag">Time Conflict</span>
+            }
+
+            <button 
+              class="btn-toggle"
+              [class.selected]="isSelected(course.id)"
+              [disabled]="isConflicting(course) && !isSelected(course.id)"
+              (click)="toggleCourse(course)"
+            >
+              {{ isSelected(course.id) ? 'Remove' : 'Add Course' }}
+            </button>
+          </div>
+        }
+      </div>
+    </div>
+
+    <!-- Timetable -->
+    <div class="timetable-panel">
+      <h3>Weekly Schedule</h3>
+      <div class="timetable-grid">
+        <div class="grid-header">
+          <div class="time-col-header">Time</div>
+          @for (day of weekdays; track day) {
+            <div class="day-header">{{ day }}</div>
+          }
+        </div>
+
+        <div class="grid-body">
+          @for (time of timeSlots; track time) {
+            <div class="time-row">
+              <div class="time-label">{{ time }}</div>
+              @for (day of weekdays; track day) {
+                <div class="slot-cell">
+                  @if (getCourseForSlot(day, time); as course) {
+                    <div class="scheduled-block">
+                      <strong>{{ course.code }}</strong>
+                      <span>{{ course.title }}</span>
+                    </div>
+                  }
+                </div>
+              }
+            </div>
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
