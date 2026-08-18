@@ -94,24 +94,51 @@
     <!-- Courses Section -->
     <section class="courses-section">
       <div class="courses-header">
-        <h2>Available Courses</h2>
-        
-        <!-- Search Input -->
-        <div class="search-box">
-          <span class="search-icon">🔍</span>
-          <input 
-            type="text" 
-            placeholder="Search by code, title, or instructor..." 
-            [ngModel]="searchTerm()" 
-            (ngModelChange)="searchTerm.set($event)" 
-          />
+        <div class="header-title">
+          <h2>Available Courses 📚</h2>
+          <span class="results-count">({{ filteredCourses().length }} items)</span>
         </div>
+
+        <div class="controls-group">
+          <!-- Search Input -->
+          <div class="search-box">
+            <span class="search-icon">🔍</span>
+            <input 
+              type="text" 
+              placeholder="Search code, title, instructor..." 
+              [ngModel]="searchTerm()" 
+              (ngModelChange)="searchTerm.set($event)" 
+            />
+          </div>
+
+          <!-- Sort Select Dropdown -->
+          <div class="select-wrapper">
+            <select [value]="selectedSort()" (change)="onSortChange($event)" class="sort-select">
+              <option value="title-asc">Sort: A to Z</option>
+              <option value="title-desc">Sort: Z to A</option>
+              <option value="credits-high">Credits: High to Low</option>
+              <option value="credits-low">Credits: Low to High</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- Category Filter Pills -->
+      <div class="category-pills">
+        @for (cat of availableCategories(); track cat) {
+          <button 
+            class="pill-btn" 
+            [class.active]="selectedCategory() === cat" 
+            (click)="onCategoryChange(cat)">
+            {{ cat === 'all' ? 'All Categories' : cat }}
+          </button>
+        }
       </div>
 
       @if (isLoadingCourses()) {
         <p class="loading-text">Loading courses...</p>
       } @else if (filteredCourses().length === 0) {
-        <p class="empty-text">No matching courses found.</p>
+        <p class="empty-text">No courses match your search or selected filter.</p>
       } @else {
         <div class="courses-grid">
           @for (course of filteredCourses(); track course.id) {
@@ -122,7 +149,7 @@
               </div>
               <h3>{{ course.title }}</h3>
               <p class="course-desc">{{ course.description }}</p>
-              
+
               <div class="card-footer" (click)="$event.stopPropagation()">
                 <span class="instructor-name">👨‍🏫 {{ course.instructor || 'TBA' }}</span>
                 <button 
@@ -155,6 +182,9 @@
           <div class="meta-pills">
             <span class="pill">💳 {{ course.credits }} Credits</span>
             <span class="pill">👨‍🏫 Instructor: {{ course.instructor || 'TBA' }}</span>
+            @if (course.category) {
+              <span class="pill">🏷️ {{ course.category }}</span>
+            }
           </div>
 
           <h4>Course Description</h4>

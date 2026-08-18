@@ -6,6 +6,8 @@ import { Announcement, AnnouncementService } from '../../services/announcement';
 import { AuthService } from '../../services/auth';
 import { Course, CourseService } from '../../services/course';
 
+export type SortOption = 'title-asc' | 'title-desc' | 'credits-high' | 'credits-low';
+
 @Component({
   selector: 'app-dashboard',
   standalone: true,
@@ -25,8 +27,10 @@ export class DashboardComponent implements OnInit {
   isLoadingCourses = signal<boolean>(true);
   isLoadingAnnouncements = signal<boolean>(true);
 
-  // Search filter signal
+  // Search, Filter & Sort Signals
   searchTerm = signal<string>('');
+  selectedCategory = signal<string>('all');
+  selectedSort = signal<SortOption>('title-asc');
 
   // Mobile navigation state
   isMobileMenuOpen = signal<boolean>(false);
@@ -34,17 +38,46 @@ export class DashboardComponent implements OnInit {
   // Computes active enrolled count
   enrolledCoursesCount = computed(() => this.courses().filter((c) => c.is_enrolled).length);
 
-  // Computes filtered course list based on search term (title or code)
+  // Dynamic unique list of categories extracted from courses
+  availableCategories = computed(() => {
+    const cats = this.courses()
+      .map((c) => c.category)
+      .filter((cat): cat is string => !!cat);
+    return ['all', ...Array.from(new Set(cats))];
+  });
+
+  // Computes filtered and sorted course list
   filteredCourses = computed(() => {
     const term = this.searchTerm().toLowerCase().trim();
-    if (!term) return this.courses();
+    const cat = this.selectedCategory();
+    const sort = this.selectedSort();
 
-    return this.courses().filter(
-      (course) =>
-        course.title.toLowerCase().includes(term) ||
-        course.code.toLowerCase().includes(term) ||
-        (course.instructor && course.instructor.toLowerCase().includes(term)),
-    );
+    return this.courses()
+      .filter((course) => {
+        const matchesSearch =
+          !term ||
+          course.title.toLowerCase().includes(term) ||
+          course.code.toLowerCase().includes(term) ||
+          (course.instructor && course.instructor.toLowerCase().includes(term));
+
+        const matchesCategory = cat === 'all' || course.category === cat;
+
+        return matchesSearch && matchesCategory;
+      })
+      .sort((a, b) => {
+        switch (sort) {
+          case 'title-asc':
+            return a.title.localeCompare(b.title);
+          case 'title-desc':
+            return b.title.localeCompare(a.title);
+          case 'credits-high':
+            return (b.credits || 0) - (a.credits || 0);
+          case 'credits-low':
+            return (a.credits || 0) - (b.credits || 0);
+          default:
+            return 0;
+        }
+      });
   });
 
   ngOnInit(): void {
@@ -58,6 +91,15 @@ export class DashboardComponent implements OnInit {
 
   closeMobileMenu(): void {
     this.isMobileMenuOpen.set(false);
+  }
+
+  onCategoryChange(category: string): void {
+    this.selectedCategory.set(category);
+  }
+
+  onSortChange(event: Event): void {
+    const value = (event.target as HTMLSelectElement).value as SortOption;
+    this.selectedSort.set(value);
   }
 
   fetchCourses(): void {

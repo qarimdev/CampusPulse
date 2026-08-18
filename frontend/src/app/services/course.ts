@@ -10,6 +10,7 @@ export interface Course {
   instructor?: string;
   credits: number;
   is_enrolled?: boolean;
+  category: string;
 }
 
 @Injectable({
