@@ -79,6 +79,7 @@
     justify-content: center;
     font-size: 2rem;
     font-weight: 700;
+    flex-shrink: 0;
   }
 
   .user-details {
@@ -193,6 +194,19 @@
           cursor: pointer;
 
           &:hover { background-color: #fee2e2; }
+        }
+      }
+
+      @media (max-width: 640px) {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+
+        .course-meta {
+          width: 100%;
+          justify-content: space-between;
+          border-top: 1px solid #f1f5f9;
+          padding-top: 0.75rem;
         }
       }
     }

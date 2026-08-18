@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit, computed, inject, signal } from '@angular/core';
-import { Router, RouterLink } from '@angular/router';
+import { RouterLink } from '@angular/router';
 import { AuthService } from '../../services/auth';
 import { Course, CourseService } from '../../services/course';
 
@@ -14,7 +14,6 @@ import { Course, CourseService } from '../../services/course';
 export class ProfileComponent implements OnInit {
   private authService = inject(AuthService);
   private courseService = inject(CourseService);
-  private router = inject(Router);
 
   currentUser = this.authService.currentUser;
   courses = signal<Course[]>([]);
@@ -23,9 +22,9 @@ export class ProfileComponent implements OnInit {
   // Filter only enrolled courses
   enrolledCourses = computed(() => this.courses().filter((course) => course.is_enrolled));
 
-  // Compute total credits enrolled
+  // Compute total credits enrolled with fallback safeguard
   totalCredits = computed(() =>
-    this.enrolledCourses().reduce((sum, course) => sum + course.credits, 0),
+    this.enrolledCourses().reduce((sum, course) => sum + (course.credits || 0), 0),
   );
 
   ngOnInit(): void {
