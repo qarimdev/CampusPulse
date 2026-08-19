@@ -16,11 +16,10 @@ export class ProfileComponent implements OnInit {
   private courseService = inject(CourseService);
 
   currentUser = this.authService.currentUser;
-  courses = signal<Course[]>([]);
-  isLoading = signal<boolean>(true);
 
-  // Filter only enrolled courses
-  enrolledCourses = computed(() => this.courses().filter((course) => course.is_enrolled));
+  // Direct reactive binding to global enrollment state
+  enrolledCourses = this.courseService.enrolledCourses;
+  isLoading = signal<boolean>(true);
 
   // Compute total credits enrolled with fallback safeguard
   totalCredits = computed(() =>
@@ -33,8 +32,7 @@ export class ProfileComponent implements OnInit {
 
   fetchCourses(): void {
     this.courseService.getCourses().subscribe({
-      next: (data) => {
-        this.courses.set(data);
+      next: () => {
         this.isLoading.set(false);
       },
       error: (err) => {
@@ -46,12 +44,6 @@ export class ProfileComponent implements OnInit {
 
   dropCourse(course: Course): void {
     this.courseService.toggleEnrollment(course.id).subscribe({
-      next: () => {
-        // Update local list reactively
-        this.courses.update((list) =>
-          list.map((c) => (c.id === course.id ? { ...c, is_enrolled: false } : c)),
-        );
-      },
       error: (err) => console.error('Failed to drop course', err),
     });
   }
