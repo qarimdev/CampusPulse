@@ -24,7 +24,9 @@ export class DashboardComponent implements OnInit {
   private route = inject(ActivatedRoute);
 
   currentUser = this.authService.currentUser;
-  courses = signal<Course[]>([]);
+
+  // Directly bind to CourseService signal
+  courses = this.courseService.courses;
   announcements = signal<Announcement[]>([]);
 
   isLoadingCourses = signal<boolean>(true);
@@ -44,7 +46,7 @@ export class DashboardComponent implements OnInit {
   // Debounce timer reference
   private searchDebounceTimer: ReturnType<typeof setTimeout> | null = null;
 
-  // Computes active enrolled count
+  // Computes active enrolled count directly from service state
   enrolledCoursesCount = computed(() => this.courses().filter((c) => c.is_enrolled).length);
 
   // Dynamic unique list of categories extracted from courses
@@ -118,7 +120,6 @@ export class DashboardComponent implements OnInit {
   onSearchChange(term: string): void {
     this.searchTerm.set(term);
 
-    // Debounce updating URL to avoid lagging while typing
     if (this.searchDebounceTimer) {
       clearTimeout(this.searchDebounceTimer);
     }
@@ -156,8 +157,7 @@ export class DashboardComponent implements OnInit {
   fetchCourses(): void {
     this.isLoadingCourses.set(true);
     this.courseService.getCourses().subscribe({
-      next: (data) => {
-        this.courses.set(data);
+      next: () => {
         this.isLoadingCourses.set(false);
       },
       error: (err) => {
@@ -182,37 +182,11 @@ export class DashboardComponent implements OnInit {
   }
 
   toggleEnroll(course: Course): void {
-    const previousState = course.is_enrolled;
-
-    // Optimistic UI update for main list
-    this.courses.update((list) =>
-      list.map((c) => (c.id === course.id ? { ...c, is_enrolled: !c.is_enrolled } : c)),
-    );
-
-    // Sync selected modal course if active
     if (this.selectedCourse()?.id === course.id) {
       this.selectedCourse.update((c) => (c ? { ...c, is_enrolled: !c.is_enrolled } : null));
     }
 
-    this.courseService.toggleEnrollment(course.id).subscribe({
-      next: (res) => {
-        this.courses.update((list) =>
-          list.map((c) => (c.id === course.id ? { ...c, is_enrolled: res.is_enrolled } : c)),
-        );
-        if (this.selectedCourse()?.id === course.id) {
-          this.selectedCourse.update((c) => (c ? { ...c, is_enrolled: res.is_enrolled } : null));
-        }
-      },
-      error: (err) => {
-        console.error('Failed to toggle enrollment', err);
-        this.courses.update((list) =>
-          list.map((c) => (c.id === course.id ? { ...c, is_enrolled: previousState } : c)),
-        );
-        if (this.selectedCourse()?.id === course.id) {
-          this.selectedCourse.update((c) => (c ? { ...c, is_enrolled: previousState } : null));
-        }
-      },
-    });
+    this.courseService.toggleEnrollment(course.id).subscribe();
   }
 
   openCourseDetails(course: Course): void {
