@@ -21,7 +21,7 @@
     <div class="catalog-panel">
       <h3>Available Courses</h3>
       <div class="course-list">
-        @for (course of availableCourses; track course.id) {
+        @for (course of courses(); track course.id) {
           <div 
             class="planner-card" 
             [class.selected]="isSelected(course.id)"
@@ -35,7 +35,7 @@
             <p class="schedule">{{ course.days.join(', ') }} • {{ course.startTime }} - {{ course.endTime }}</p>
 
             @if (isConflicting(course)) {
-              <span class="conflict-tag">Time Conflict</span>
+              <span class="conflict-tag">⚠️ Time Conflict</span>
             }
 
             <button 
@@ -69,7 +69,12 @@
               @for (day of weekdays; track day) {
                 <div class="slot-cell">
                   @if (getCourseForSlot(day, time); as course) {
-                    <div class="scheduled-block">
+                    @let theme = getCourseTheme(course.id);
+                    <div 
+                      class="scheduled-block"
+                      [style.background-color]="theme.bg"
+                      [style.color]="theme.text"
+                    >
                       <strong>{{ course.code }}</strong>
                       <span>{{ course.title }}</span>
                     </div>

@@ -14,9 +14,9 @@ export class CoursePlannerComponent {
 
   maxCredits = 18;
   weekdays = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'];
-  timeSlots = ['09:00', '10:00', '11:00', '12:00', '13:00', '14:00'];
+  timeSlots = ['08:00', '09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00'];
 
-  // All courses and enrolled courses dynamically retrieved from CourseService
+  // Signals retrieved from CourseService
   courses = this.courseService.courses;
   selectedCourses = this.courseService.enrolledCourses;
 
@@ -63,5 +63,18 @@ export class CoursePlannerComponent {
         c.startTime <= time &&
         c.endTime > time,
     );
+  }
+
+  // Generate distinct background & text colors per course ID
+  getCourseTheme(courseId: number): { bg: string; text: string } {
+    const themes = [
+      { bg: '#4f46e5', text: '#ffffff' }, // Indigo
+      { bg: '#059669', text: '#ffffff' }, // Emerald
+      { bg: '#d97706', text: '#ffffff' }, // Amber
+      { bg: '#9333ea', text: '#ffffff' }, // Purple
+      { bg: '#0284c7', text: '#ffffff' }, // Sky
+      { bg: '#e11d48', text: '#ffffff' }, // Rose
+    ];
+    return themes[courseId % themes.length];
   }
 }

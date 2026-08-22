@@ -51,12 +51,15 @@
   }
 
   .catalog-panel {
+    h3 { margin-top: 0; margin-bottom: 0.75rem; font-size: 1.1rem; color: #0f172a; }
+
     .course-list {
       display: flex;
       flex-direction: column;
       gap: 0.75rem;
-      max-height: 520px;
+      max-height: 540px;
       overflow-y: auto;
+      padding-right: 4px;
     }
 
     .planner-card {
@@ -72,7 +75,7 @@
       }
 
       &.disabled-conflict {
-        opacity: 0.6;
+        opacity: 0.65;
         background: #f1f5f9;
       }
 
@@ -100,7 +103,7 @@
 
       .btn-toggle {
         width: 100%;
-        padding: 0.35rem;
+        padding: 0.4rem;
         font-size: 0.8rem;
         font-weight: 600;
         border-radius: 6px;
@@ -108,6 +111,7 @@
         background: #ffffff;
         color: #6366f1;
         cursor: pointer;
+        transition: background 0.15s ease;
 
         &.selected {
           background: #fef2f2;
@@ -125,53 +129,62 @@
   }
 
   .timetable-panel {
+    h3 { margin-top: 0; margin-bottom: 0.75rem; font-size: 1.1rem; color: #0f172a; }
+
     .timetable-grid {
       border: 1px solid #e2e8f0;
       border-radius: 8px;
-      overflow: hidden;
+      overflow-x: auto;
 
       .grid-header {
         display: grid;
-        grid-template-columns: 60px repeat(5, 1fr);
+        grid-template-columns: 65px repeat(5, minmax(100px, 1fr));
         background: #f8fafc;
         border-bottom: 1px solid #e2e8f0;
         font-size: 0.8rem;
         font-weight: 700;
+        color: #475569;
         text-align: center;
-        padding: 0.5rem 0;
+        padding: 0.6rem 0;
       }
 
       .time-row {
         display: grid;
-        grid-template-columns: 60px repeat(5, 1fr);
-        border-bottom: 1px solid #e2e8f0;
-        min-height: 60px;
+        grid-template-columns: 65px repeat(5, minmax(100px, 1fr));
+        border-bottom: 1px solid #f1f5f9;
+        min-height: 56px;
 
         &:last-child { border-bottom: none; }
 
         .time-label {
-          font-size: 0.75rem;
+          font-size: 0.725rem;
+          font-weight: 600;
           color: #64748b;
-          padding: 0.25rem;
-          text-align: center;
+          padding: 0.35rem;
+          display: flex;
+          align-items: center;
+          justify-content: center;
           border-right: 1px solid #e2e8f0;
+          background: #f8fafc;
         }
 
         .slot-cell {
-          border-right: 1px solid #e2e8f0;
-          padding: 0.2rem;
+          border-right: 1px solid #f1f5f9;
+          padding: 3px;
           &:last-child { border-right: none; }
 
           .scheduled-block {
-            background: #6366f1;
-            color: #fff;
-            padding: 0.25rem;
-            border-radius: 4px;
+            padding: 0.35rem;
+            border-radius: 6px;
             font-size: 0.7rem;
             height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
 
-            strong { display: block; }
-            span { font-size: 0.65rem; opacity: 0.9; }
+            strong { display: block; font-weight: 700; }
+            span { font-size: 0.65rem; opacity: 0.9; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
           }
         }
       }
