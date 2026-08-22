@@ -1,0 +1,152 @@
+.gpa-container {
+  background: #ffffff;
+  border-radius: 16px;
+  border: 1px solid #e2e8f0;
+  padding: 1.5rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+
+  .gpa-header {
+    margin-bottom: 1.5rem;
+
+    h2 {
+      margin: 0;
+      font-size: 1.35rem;
+      color: #0f172a;
+    }
+
+    p {
+      margin: 0.25rem 0 0;
+      font-size: 0.875rem;
+      color: #64748b;
+    }
+  }
+
+  .summary-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+
+    .card {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      padding: 1.25rem;
+      display: flex;
+      flex-direction: column;
+
+      .card-title {
+        font-size: 0.8rem;
+        font-weight: 600;
+        color: #64748b;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+      }
+
+      .card-value {
+        font-size: 1.75rem;
+        font-weight: 800;
+        color: #0f172a;
+        margin: 0.25rem 0;
+      }
+
+      .card-subtitle {
+        font-size: 0.75rem;
+        color: #94a3b8;
+      }
+
+      &.gpa-card {
+        background: linear-gradient(135deg, #4f46e5 0%, #3730a3 100%);
+        color: #ffffff;
+        border: none;
+
+        .card-title, .card-subtitle {
+          color: #c7d2fe;
+        }
+
+        .gpa-value {
+          font-size: 2.25rem;
+          font-weight: 800;
+          color: #ffffff;
+          margin: 0.1rem 0;
+        }
+      }
+    }
+  }
+
+  .courses-panel {
+    h3 {
+      margin: 0 0 1rem;
+      font-size: 1.1rem;
+      color: #0f172a;
+    }
+
+    .empty-state {
+      padding: 2rem;
+      text-align: center;
+      background: #f8fafc;
+      border-radius: 8px;
+      color: #64748b;
+      font-size: 0.9rem;
+    }
+
+    .table-wrapper {
+      overflow-x: auto;
+    }
+
+    .gpa-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.875rem;
+
+      th {
+        background: #f8fafc;
+        padding: 0.75rem 1rem;
+        font-weight: 700;
+        color: #475569;
+        border-bottom: 1px solid #e2e8f0;
+        text-align: left;
+      }
+
+      td {
+        padding: 0.85rem 1rem;
+        border-bottom: 1px solid #f1f5f9;
+        color: #1e293b;
+      }
+
+      .code-cell {
+        font-weight: 700;
+        color: #4338ca;
+      }
+
+      .title-cell {
+        font-weight: 500;
+      }
+
+      .quality-pts {
+        font-weight: 700;
+        color: #0f172a;
+      }
+
+      .text-center { text-align: center; }
+      .text-right { text-align: right; }
+
+      .grade-select {
+        padding: 0.4rem 0.6rem;
+        border-radius: 6px;
+        border: 1px solid #cbd5e1;
+        background-color: #ffffff;
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: #0f172a;
+        cursor: pointer;
+        outline: none;
+
+        &:focus {
+          border-color: #6366f1;
+          box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.2);
+        }
+      }
+    }
+  }
+}

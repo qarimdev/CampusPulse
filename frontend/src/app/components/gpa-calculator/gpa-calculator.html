@@ -1,0 +1,78 @@
+<div class="gpa-container">
+  <div class="gpa-header">
+    <div>
+      <h2>Term GPA Calculator</h2>
+      <p>Estimate your grade point average based on your active enrolled courses.</p>
+    </div>
+  </div>
+
+  <div class="summary-cards">
+    <div class="card gpa-card">
+      <span class="card-title">Projected GPA</span>
+      <div class="gpa-value">{{ calculatedGpa() }}</div>
+      <span class="card-subtitle">out of 4.00</span>
+    </div>
+
+    <div class="card">
+      <span class="card-title">Total Enrolled Credits</span>
+      <div class="card-value">{{ totalCredits() }}</div>
+      <span class="card-subtitle">Credits count towards GPA</span>
+    </div>
+
+    <div class="card">
+      <span class="card-title">Total Quality Points</span>
+      <div class="card-value">{{ totalQualityPoints() | number:'1.1-2' }}</div>
+      <span class="card-subtitle">Credits × Grade Points</span>
+    </div>
+  </div>
+
+  <div class="courses-panel">
+    <h3>Enrolled Courses Grade Estimator</h3>
+
+    @if (enrolledCourses().length === 0) {
+      <div class="empty-state">
+        <p>No courses currently enrolled. Add courses from the Dashboard or Planner to calculate your GPA.</p>
+      </div>
+    } @else {
+      <div class="table-wrapper">
+        <table class="gpa-table">
+          <thead>
+            <tr>
+              <th>Course Code</th>
+              <th>Course Title</th>
+              <th class="text-center">Credits</th>
+              <th class="text-center">Target Grade</th>
+              <th class="text-right">Quality Points</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (course of enrolledCourses(); track course.id) {
+              @let pts = getGradeForCourse(course.id);
+              <tr>
+                <td class="code-cell">{{ course.code }}</td>
+                <td class="title-cell">{{ course.title }}</td>
+                <td class="text-center">{{ course.credits }}</td>
+                <td class="text-center">
+                  <select 
+                    class="grade-select"
+                    [value]="pts" 
+                    (change)="onGradeChange(course.id, $event)"
+                  >
+                    @for (option of gradeOptions; track option.label) {
+                      <option [value]="option.points">
+                        {{ option.label }} ({{ option.points.toFixed(1) }})
+                      </option>
+                    }
+                  </select>
+                </td>
+                <td class="text-right quality-pts">
+                  {{ ((course.credits || 0) * pts).toFixed(1) }}
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    }
+  </div>
+</div>
