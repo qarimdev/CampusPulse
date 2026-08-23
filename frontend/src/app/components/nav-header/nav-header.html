@@ -1,0 +1,67 @@
+<header class="main-header">
+  <div class="header-content">
+    <!-- Brand / Logo -->
+    <a routerLink="/dashboard" class="brand-logo">
+      <span class="logo-badge">CP</span>
+      <span class="brand-name">Campus<strong>Pulse</strong></span>
+    </a>
+
+    <!-- Desktop Navigation Links -->
+    <nav class="desktop-nav">
+      @for (item of navItems; track item.path) {
+        <a 
+          [routerLink]="item.path" 
+          routerLinkActive="active" 
+          class="nav-link"
+        >
+          <span class="icon">{{ item.icon }}</span>
+          <span>{{ item.label }}</span>
+        </a>
+      }
+    </nav>
+
+    <!-- User Profile Dropdown & Mobile Toggle -->
+    <div class="header-actions">
+      <div class="profile-dropdown-wrapper">
+        <button class="profile-btn" (click)="toggleDropdown()">
+          <span class="avatar">U</span>
+          <span class="profile-label">Student</span>
+          <span class="arrow-icon">▾</span>
+        </button>
+
+        @if (dropdownOpen()) {
+          <div class="dropdown-menu">
+            <a routerLink="/profile" (click)="dropdownOpen.set(false)">
+              👤 View Profile
+            </a>
+            <button (click)="logout()" class="logout-btn">
+              🚪 Log Out
+            </button>
+          </div>
+        }
+      </div>
+
+      <!-- Mobile Menu Toggle Button -->
+      <button class="mobile-toggle-btn" (click)="toggleMenu()">
+        ☰
+      </button>
+    </div>
+  </div>
+
+  <!-- Mobile Dropdown Navigation -->
+  @if (menuOpen()) {
+    <nav class="mobile-nav">
+      @for (item of navItems; track item.path) {
+        <a 
+          [routerLink]="item.path" 
+          routerLinkActive="active" 
+          class="mobile-nav-link"
+          (click)="menuOpen.set(false)"
+        >
+          <span class="icon">{{ item.icon }}</span>
+          <span>{{ item.label }}</span>
+        </a>
+      }
+    </nav>
+  }
+</header>

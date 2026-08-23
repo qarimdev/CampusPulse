@@ -1,14 +1,14 @@
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
+import { NavHeaderComponent } from './components/nav-header/nav-header';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet],
-  templateUrl: './app.html', // or ./app.component.html
-  styleUrl: './app.scss', // or ./app.component.scss
+  imports: [RouterOutlet, NavHeaderComponent],
+  templateUrl: './app.html',
+  styleUrl: './app.scss',
 })
 export class AppComponent {
-  // <-- Ensure this class name is 'AppComponent'
   title = 'frontend';
 }

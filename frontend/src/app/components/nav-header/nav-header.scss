@@ -1,0 +1,206 @@
+.main-header {
+  background: #ffffff;
+  border-bottom: 1px solid #e2e8f0;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
+
+  .header-content {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 1.5rem;
+    height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .brand-logo {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    text-decoration: none;
+
+    .logo-badge {
+      background: linear-gradient(135deg, #4f46e5 0%, #3730a3 100%);
+      color: #ffffff;
+      font-weight: 800;
+      font-size: 0.85rem;
+      padding: 0.35rem 0.55rem;
+      border-radius: 8px;
+    }
+
+    .brand-name {
+      font-size: 1.15rem;
+      color: #0f172a;
+      font-weight: 500;
+
+      strong {
+        color: #4f46e5;
+        font-weight: 800;
+      }
+    }
+  }
+
+  .desktop-nav {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+
+    @media (max-width: 768px) {
+      display: none;
+    }
+
+    .nav-link {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.5rem 0.85rem;
+      border-radius: 8px;
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: #64748b;
+      text-decoration: none;
+      transition: all 0.15s ease;
+
+      .icon {
+        font-size: 0.95rem;
+      }
+
+      &:hover {
+        background: #f8fafc;
+        color: #0f172a;
+      }
+
+      &.active {
+        background: #e0e7ff;
+        color: #4338ca;
+      }
+    }
+  }
+
+  .header-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+
+    .profile-dropdown-wrapper {
+      position: relative;
+
+      .profile-btn {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+        padding: 0.35rem 0.75rem;
+        border-radius: 20px;
+        cursor: pointer;
+        font-size: 0.85rem;
+        color: #0f172a;
+
+        .avatar {
+          width: 26px;
+          height: 26px;
+          border-radius: 50%;
+          background: #6366f1;
+          color: #ffffff;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-weight: 700;
+          font-size: 0.75rem;
+        }
+
+        .arrow-icon {
+          color: #94a3b8;
+          font-size: 0.75rem;
+        }
+      }
+
+      .dropdown-menu {
+        position: absolute;
+        right: 0;
+        top: calc(100% + 8px);
+        width: 160px;
+        background: #ffffff;
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        padding: 0.35rem;
+        display: flex;
+        flex-direction: column;
+
+        a, .logout-btn {
+          display: block;
+          width: 100%;
+          text-align: left;
+          padding: 0.5rem 0.75rem;
+          font-size: 0.825rem;
+          font-weight: 600;
+          color: #334155;
+          text-decoration: none;
+          background: none;
+          border: none;
+          border-radius: 6px;
+          cursor: pointer;
+
+          &:hover {
+            background: #f1f5f9;
+          }
+        }
+
+        .logout-btn {
+          color: #dc2626;
+
+          &:hover {
+            background: #fef2f2;
+          }
+        }
+      }
+    }
+
+    .mobile-toggle-btn {
+      display: none;
+      background: none;
+      border: 1px solid #e2e8f0;
+      border-radius: 6px;
+      padding: 0.35rem 0.6rem;
+      font-size: 1.1rem;
+      cursor: pointer;
+
+      @media (max-width: 768px) {
+        display: block;
+      }
+    }
+  }
+
+  .mobile-nav {
+    display: flex;
+    flex-direction: column;
+    background: #ffffff;
+    border-top: 1px solid #f1f5f9;
+    padding: 0.75rem 1.5rem;
+
+    @media (min-width: 769px) {
+      display: none;
+    }
+
+    .mobile-nav-link {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      padding: 0.65rem 0;
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: #475569;
+      text-decoration: none;
+      border-bottom: 1px solid #f8fafc;
+
+      &.active {
+        color: #4338ca;
+      }
+    }
+  }
+}
