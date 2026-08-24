@@ -1,0 +1,63 @@
+<!-- Trigger Button -->
+<button class="drawer-trigger-btn" (click)="toggleDrawer()">
+  🔔 Announcements
+  @if (unreadCount() > 0) {
+    <span class="badge">{{ unreadCount() }}</span>
+  }
+</button>
+
+<!-- Backdrop -->
+@if (isOpen()) {
+  <div class="drawer-backdrop" (click)="toggleDrawer()"></div>
+}
+
+<!-- Slide-over Drawer -->
+<div class="announcement-drawer" [class.open]="isOpen()">
+  <div class="drawer-header">
+    <h3>📢 Campus Announcements</h3>
+    <button class="close-btn" (click)="toggleDrawer()">✕</button>
+  </div>
+
+  @if (activePost(); as post) {
+    <!-- Full Post View -->
+    <div class="post-detail">
+      <button class="back-btn" (click)="backToList()">← Back to list</button>
+      <div class="post-meta">
+        <span class="tag" [attr.data-category]="post.category">{{ post.category }}</span>
+        <span class="date">{{ post.date }}</span>
+      </div>
+      <h2>{{ post.title }}</h2>
+      <p class="author">By {{ post.author }}</p>
+      <hr />
+      <div class="post-content">
+        <p>{{ post.content }}</p>
+      </div>
+    </div>
+  } @else {
+    <!-- List & Filter Tabs View -->
+    <div class="category-tabs">
+      @for (cat of ['All', 'Academic', 'Events', 'Urgent']; track cat) {
+        <button 
+          class="tab-btn" 
+          [class.active]="selectedCategory() === cat"
+          (click)="setCategory(cat)"
+        >
+          {{ cat }}
+        </button>
+      }
+    </div>
+
+    <div class="announcement-list">
+      @for (item of filteredAnnouncements(); track item.id) {
+        <div class="announcement-card" [class.unread]="item.unread" (click)="openPost(item)">
+          <div class="card-top">
+            <span class="tag" [attr.data-category]="item.category">{{ item.category }}</span>
+            <span class="date">{{ item.date }}</span>
+          </div>
+          <h4>{{ item.title }}</h4>
+          <p>{{ item.summary }}</p>
+        </div>
+      }
+    </div>
+  }
+</div>
