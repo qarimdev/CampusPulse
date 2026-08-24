@@ -1,0 +1,33 @@
+<div class="timetable-card">
+  <div class="tt-header">
+    <h3>Weekly Class Schedule 🗓️</h3>
+    <p class="subtitle">Visual timetable based on your enrolled courses</p>
+  </div>
+
+  <div class="grid-wrapper">
+    <div class="timetable-grid">
+      <!-- Header Row -->
+      <div class="header-cell time-header">Time</div>
+      @for (day of days; track day) {
+        <div class="header-cell">{{ day }}</div>
+      }
+
+      <!-- Grid Rows -->
+      @for (slot of timeSlots; track slot) {
+        <div class="time-cell">{{ slot }}</div>
+
+        @for (day of days; track day) {
+          <div class="slot-cell">
+            @for (course of getCoursesForSlot(day, slot); track course.id) {
+              <div class="class-block">
+                <span class="code">{{ course.code }}</span>
+                <span class="title">{{ course.title }}</span>
+                <span class="time-range">{{ course.startTime }} - {{ course.endTime }}</span>
+              </div>
+            }
+          </div>
+        }
+      }
+    </div>
+  </div>
+</div>

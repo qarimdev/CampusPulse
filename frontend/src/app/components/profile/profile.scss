@@ -163,13 +163,33 @@
   border: 1px solid #e2e8f0;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
 
-  .gpa-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 1.25rem;
+/* Add inside .gpa-header in profile.scss */
+.gpa-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.25rem;
 
-    h2 { margin: 0; font-size: 1.2rem; color: #0f172a; }
+  h2 { margin: 0; font-size: 1.2rem; color: #0f172a; }
+
+  .gpa-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+
+    .btn-calc-toggle {
+      background-color: #e0e7ff;
+      color: #4338ca;
+      border: 1px solid #c7d2fe;
+      padding: 0.35rem 0.75rem;
+      border-radius: 8px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+
+      &:hover { background-color: #c7d2fe; }
+    }
 
     .cgpa-badge {
       background-color: #f0fdf4;
@@ -181,6 +201,11 @@
       border-radius: 20px;
     }
   }
+}
+
+.calc-section {
+  margin-top: 1.5rem;
+}
 
   .gpa-grid {
     display: grid;

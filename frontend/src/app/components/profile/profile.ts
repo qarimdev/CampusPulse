@@ -4,11 +4,13 @@ import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { AuthService } from '../../services/auth';
 import { Course, CourseService } from '../../services/course';
+import { GpaCalculatorComponent } from '../gpa-calculator/gpa-calculator';
+import { TimetableComponent } from '../timetable/timetable';
 
 @Component({
   selector: 'app-profile',
   standalone: true,
-  imports: [CommonModule, RouterLink, FormsModule],
+  imports: [CommonModule, RouterLink, FormsModule, GpaCalculatorComponent, TimetableComponent],
   templateUrl: './profile.html',
   styleUrl: './profile.scss',
 })
@@ -22,6 +24,9 @@ export class ProfileComponent implements OnInit {
   enrolledCourses = this.courseService.enrolledCourses;
   isLoading = signal<boolean>(true);
 
+  // Toggle state for GPA calculator display
+  showGpaCalculator = signal<boolean>(false);
+
   // Student Academic Performance Signals
   currentGpa = signal<number>(3.62);
   targetGpa = signal<number>(3.8);
@@ -33,12 +38,10 @@ export class ProfileComponent implements OnInit {
   studentMajor = signal<string>('Computer Science (Software Engineering)');
   studentId = signal<string>('CS-2024-8891');
 
-  // Compute total credits enrolled with fallback safeguard
   totalCredits = computed(() =>
     this.enrolledCourses().reduce((sum, course) => sum + (course.credits || 0), 0),
   );
 
-  // Compute GPA Progress Percentage towards Target
   gpaProgressPercentage = computed(() => {
     const current = this.currentGpa();
     const target = this.targetGpa();
@@ -53,9 +56,7 @@ export class ProfileComponent implements OnInit {
 
   fetchCourses(): void {
     this.courseService.getCourses().subscribe({
-      next: () => {
-        this.isLoading.set(false);
-      },
+      next: () => this.isLoading.set(false),
       error: (err) => {
         console.error('Failed to load user courses', err);
         this.isLoading.set(false);
@@ -67,6 +68,10 @@ export class ProfileComponent implements OnInit {
     this.courseService.toggleEnrollment(course.id).subscribe({
       error: (err) => console.error('Failed to drop course', err),
     });
+  }
+
+  toggleGpaCalculator(): void {
+    this.showGpaCalculator.update((val) => !val);
   }
 
   toggleEditProfile(): void {

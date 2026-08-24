@@ -26,7 +26,7 @@
           </button>
         </div>
         <p class="email">✉️ {{ currentUser()?.email }}</p>
-        
+
         <div class="meta-pills">
           <span class="badge-role">Student</span>
           <span class="badge-id">ID: {{ studentId() }}</span>
@@ -39,7 +39,12 @@
     <section class="gpa-card">
       <div class="gpa-header">
         <h2>Academic Performance & Target GPA 🎯</h2>
-        <span class="cgpa-badge">CGPA: {{ cgpa() }} / 4.00</span>
+        <div class="gpa-actions">
+          <button class="btn-calc-toggle" (click)="toggleGpaCalculator()">
+            {{ showGpaCalculator() ? '✖ Hide Calculator' : '🧮 Term GPA Calculator' }}
+          </button>
+          <span class="cgpa-badge">CGPA: {{ cgpa() }} / 4.00</span>
+        </div>
       </div>
 
       <div class="gpa-grid">
@@ -82,6 +87,13 @@
         </div>
       </div>
     </section>
+
+    <!-- Interactive GPA Calculator Widget -->
+    @if (showGpaCalculator()) {
+      <section class="calc-section">
+        <app-gpa-calculator></app-gpa-calculator>
+      </section>
+    }
 
     <!-- Enrolled Summary Stats -->
     <div class="stats-row">
@@ -128,6 +140,9 @@
             </div>
           }
         </div>
+
+        <!-- Weekly Timetable Visualizer -->
+        <app-timetable [courses]="enrolledCourses()"></app-timetable>
       }
     </section>
   </main>
