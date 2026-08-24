@@ -19,9 +19,67 @@
         <span>{{ currentUser()?.name?.charAt(0) || 'S' }}</span>
       </div>
       <div class="user-details">
-        <h1>{{ currentUser()?.name }}</h1>
+        <div class="user-header-row">
+          <h1>{{ currentUser()?.name || 'Student Name' }}</h1>
+          <button class="btn-edit-toggle" (click)="toggleEditProfile()">
+            {{ isEditing() ? '✓ Save Profile' : '✏️ Edit Profile' }}
+          </button>
+        </div>
         <p class="email">✉️ {{ currentUser()?.email }}</p>
-        <span class="badge-role">Student</span>
+        
+        <div class="meta-pills">
+          <span class="badge-role">Student</span>
+          <span class="badge-id">ID: {{ studentId() }}</span>
+          <span class="badge-major">🎓 {{ studentMajor() }}</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Academic Progress & GPA Tracker Card -->
+    <section class="gpa-card">
+      <div class="gpa-header">
+        <h2>Academic Performance & Target GPA 🎯</h2>
+        <span class="cgpa-badge">CGPA: {{ cgpa() }} / 4.00</span>
+      </div>
+
+      <div class="gpa-grid">
+        <div class="gpa-stat">
+          <span class="stat-label">Current GPA</span>
+          <span class="stat-value primary">{{ currentGpa() | number:'1.2-2' }}</span>
+        </div>
+
+        <div class="gpa-stat">
+          <span class="stat-label">Target GPA</span>
+          @if (isEditing()) {
+            <input 
+              type="number" 
+              step="0.01" 
+              min="0" 
+              max="4.0" 
+              [ngModel]="targetGpa()" 
+              (ngModelChange)="targetGpa.set($event)"
+              class="target-input" 
+            />
+          } @else {
+            <span class="stat-value target">{{ targetGpa() | number:'1.2-2' }}</span>
+          }
+        </div>
+
+        <div class="gpa-stat">
+          <span class="stat-label">Completed Credits</span>
+          <span class="stat-value">{{ completedCredits() }}</span>
+        </div>
+      </div>
+
+      <!-- Target GPA Progress Bar -->
+      <div class="progress-section">
+        <div class="progress-labels">
+          <span>Target Progress</span>
+          <span>{{ gpaProgressPercentage() }}% of Goal</span>
+        </div>
+        <div class="progress-track">
+          <div class="progress-fill" [style.width.%]="gpaProgressPercentage()"></div>
+        </div>
       </div>
     </section>
 
@@ -33,7 +91,11 @@
       </div>
       <div class="stat-box">
         <h3>{{ totalCredits() }}</h3>
-        <p>Total Credits</p>
+        <p>Current Active Credits</p>
+      </div>
+      <div class="stat-box">
+        <h3>{{ completedCredits() + totalCredits() }}</h3>
+        <p>Total Projected Credits</p>
       </div>
     </div>
 

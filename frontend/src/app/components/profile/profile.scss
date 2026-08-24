@@ -58,6 +58,7 @@
   padding: 0 1.5rem;
 }
 
+/* User Card Header */
 .user-card {
   display: flex;
   align-items: center;
@@ -72,7 +73,7 @@
     width: 72px;
     height: 72px;
     border-radius: 50%;
-    background-color: #6366f1;
+    background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
     color: #ffffff;
     display: flex;
     align-items: center;
@@ -80,28 +81,179 @@
     font-size: 2rem;
     font-weight: 700;
     flex-shrink: 0;
+    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.25);
   }
 
   .user-details {
-    h1 { margin: 0 0 0.25rem; font-size: 1.5rem; color: #0f172a; }
-    .email { margin: 0 0 0.5rem; color: #64748b; font-size: 0.9rem; }
-    
-    .badge-role {
-      background-color: #e0e7ff;
-      color: #4338ca;
-      font-size: 0.75rem;
-      font-weight: 700;
-      padding: 0.25rem 0.65rem;
-      border-radius: 12px;
-      text-transform: uppercase;
+    flex-grow: 1;
+
+    .user-header-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      h1 { margin: 0; font-size: 1.5rem; color: #0f172a; }
+
+      .btn-edit-toggle {
+        background-color: #f1f5f9;
+        border: 1px solid #cbd5e1;
+        color: #334155;
+        padding: 0.35rem 0.75rem;
+        border-radius: 8px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s;
+
+        &:hover {
+          background-color: #e2e8f0;
+        }
+      }
+    }
+
+    .email { margin: 0.25rem 0 0.75rem; color: #64748b; font-size: 0.9rem; }
+
+    .meta-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+
+      .badge-role {
+        background-color: #e0e7ff;
+        color: #4338ca;
+        font-size: 0.75rem;
+        font-weight: 700;
+        padding: 0.25rem 0.65rem;
+        border-radius: 12px;
+        text-transform: uppercase;
+      }
+
+      .badge-id, .badge-major {
+        background-color: #f1f5f9;
+        color: #475569;
+        font-size: 0.75rem;
+        font-weight: 600;
+        padding: 0.25rem 0.65rem;
+        border-radius: 12px;
+      }
+    }
+  }
+
+  @media (max-width: 640px) {
+    flex-direction: column;
+    text-align: center;
+
+    .user-details .user-header-row {
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .meta-pills {
+      justify-content: center;
     }
   }
 }
 
+/* GPA & Academic Progress Card */
+.gpa-card {
+  margin-top: 1.5rem;
+  background-color: #ffffff;
+  padding: 1.75rem;
+  border-radius: 16px;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+
+  .gpa-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.25rem;
+
+    h2 { margin: 0; font-size: 1.2rem; color: #0f172a; }
+
+    .cgpa-badge {
+      background-color: #f0fdf4;
+      color: #166534;
+      border: 1px solid #bbf7d0;
+      font-size: 0.8rem;
+      font-weight: 700;
+      padding: 0.3rem 0.75rem;
+      border-radius: 20px;
+    }
+  }
+
+  .gpa-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+    padding: 1rem;
+    background-color: #f8fafc;
+    border-radius: 12px;
+    border: 1px solid #f1f5f9;
+
+    .gpa-stat {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.25rem;
+
+      .stat-label { font-size: 0.8rem; color: #64748b; font-weight: 500; }
+      .stat-value {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #1e293b;
+
+        &.primary { color: #4338ca; }
+        &.target { color: #0d9488; }
+      }
+
+      .target-input {
+        width: 80px;
+        text-align: center;
+        font-size: 1.2rem;
+        font-weight: 700;
+        padding: 0.2rem 0.4rem;
+        border: 1px solid #cbd5e1;
+        border-radius: 6px;
+        color: #0d9488;
+      }
+    }
+  }
+
+  .progress-section {
+    margin-top: 1.25rem;
+
+    .progress-labels {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.825rem;
+      font-weight: 600;
+      color: #64748b;
+      margin-bottom: 0.5rem;
+    }
+
+    .progress-track {
+      height: 10px;
+      width: 100%;
+      background-color: #e2e8f0;
+      border-radius: 10px;
+      overflow: hidden;
+
+      .progress-fill {
+        height: 100%;
+        background: linear-gradient(90deg, #6366f1 0%, #0d9488 100%);
+        border-radius: 10px;
+        transition: width 0.4s ease-in-out;
+      }
+    }
+  }
+}
+
+/* Enrolled Summary Stats */
 .stats-row {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1.5rem;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.25rem;
   margin-top: 1.5rem;
 
   .stat-box {
@@ -111,11 +263,16 @@
     border: 1px solid #e2e8f0;
     text-align: center;
 
-    h3 { margin: 0; font-size: 1.75rem; color: #0f172a; }
-    p { margin: 0.25rem 0 0; color: #64748b; font-size: 0.875rem; }
+    h3 { margin: 0; font-size: 1.6rem; color: #0f172a; }
+    p { margin: 0.25rem 0 0; color: #64748b; font-size: 0.825rem; font-weight: 500; }
+  }
+
+  @media (max-width: 640px) {
+    grid-template-columns: 1fr;
   }
 }
 
+/* Enrolled Courses Section */
 .enrolled-section {
   margin-top: 2rem;
 
