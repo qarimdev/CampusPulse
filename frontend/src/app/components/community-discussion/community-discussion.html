@@ -1,0 +1,99 @@
+<div class="community-container">
+  <!-- Header & Topic Filters -->
+  <header class="community-header">
+    <div>
+      <h2>Campus Lounge & Discussion</h2>
+      <p>Chit-chat, ask questions, and connect with fellow students.</p>
+    </div>
+
+    <div class="category-pills">
+      <button 
+        *ngFor="let cat of categories" 
+        [class.active]="selectedCategory() === cat"
+        (click)="setCategory(cat)">
+        #{{ cat }}
+      </button>
+    </div>
+  </header>
+
+  <!-- Create New Post Card -->
+  <div class="card create-post-card">
+    <h3>Start a Discussion</h3>
+    <input 
+      type="text" 
+      placeholder="Post title..." 
+      [ngModel]="newPostTitle()" 
+      (ngModelChange)="newPostTitle.set($event)" 
+    />
+    
+    <textarea 
+      rows="3" 
+      placeholder="What's on your mind?" 
+      [ngModel]="newPostContent()" 
+      (ngModelChange)="newPostContent.set($event)">
+    </textarea>
+
+    <div class="card-actions">
+      <select 
+        [ngModel]="newPostCategory()" 
+        (ngModelChange)="newPostCategory.set($event)">
+        <option value="General">#General</option>
+        <option value="CourseHelp">#CourseHelp</option>
+        <option value="Clubs">#Clubs</option>
+        <option value="CasualSports">#CasualSports</option>
+        <option value="Tech">#Tech</option>
+      </select>
+
+      <button class="btn-primary" (click)="createPost()">Post to Board</button>
+    </div>
+  </div>
+
+  <!-- Post Feed -->
+  <div class="feed">
+    <div *ngFor="let post of filteredPosts()" class="card post-card">
+      <div class="post-header">
+        <div class="author-info">
+          <span class="avatar">{{ post.authorName.charAt(0) }}</span>
+          <div>
+            <strong>{{ post.authorName }}</strong>
+            <span class="badge">{{ post.authorRole }}</span>
+          </div>
+        </div>
+        <span class="tag">#{{ post.category }}</span>
+      </div>
+
+      <h4 class="post-title">{{ post.title }}</h4>
+      <p class="post-content">{{ post.content }}</p>
+      
+      <div class="post-footer">
+        <button class="action-btn" [class.liked]="post.isLiked" (click)="toggleLike(post.id)">
+          ❤️ {{ post.likes }} {{ post.likes === 1 ? 'Like' : 'Likes' }}
+        </button>
+        <button class="action-btn" (click)="toggleReplyBox(post.id)">
+          💬 {{ post.comments.length }} Replies
+        </button>
+        <span class="timestamp">{{ post.createdAt }}</span>
+      </div>
+
+      <!-- Comments Section -->
+      <div class="comments-section" *ngIf="post.comments.length > 0 || activeReplyPostId() === post.id">
+        <div class="comment-item" *ngFor="let comment of post.comments">
+          <strong>{{ comment.authorName }}:</strong> {{ comment.content }}
+          <span class="timestamp">{{ comment.createdAt }}</span>
+        </div>
+
+        <!-- Inline Reply Input -->
+        <div class="reply-box" *ngIf="activeReplyPostId() === post.id">
+          <input 
+            type="text" 
+            placeholder="Write a reply..." 
+            [ngModel]="replyContent()" 
+            (ngModelChange)="replyContent.set($event)"
+            (keyup.enter)="addComment(post.id)"
+          />
+          <button class="btn-sm" (click)="addComment(post.id)">Reply</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
