@@ -35,6 +35,9 @@
       </div>
     </section>
 
+    <!-- Next Class Countdown Banner -->
+    <app-next-class [courses]="enrolledCourses()"></app-next-class>
+
     <!-- Academic Progress & GPA Tracker Card -->
     <section class="gpa-card">
       <div class="gpa-header">
@@ -94,6 +97,9 @@
         <app-gpa-calculator></app-gpa-calculator>
       </section>
     }
+
+    <!-- Quick Tasks & Assignments Checklist -->
+    <app-task-checklist></app-task-checklist>
 
     <!-- Enrolled Summary Stats -->
     <div class="stats-row">

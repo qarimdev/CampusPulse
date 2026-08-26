@@ -1,0 +1,26 @@
+<div class="next-class-card">
+  @if (nextCourseInfo(); as info) {
+    <div class="active-banner">
+      <div class="left-content">
+        <span class="pulse-dot"></span>
+        <div>
+          <span class="badge">Next Up Today</span>
+          <h3>{{ info.course.code }} - {{ info.course.title }}</h3>
+          <p class="details">👨‍🏫 {{ info.course.instructor || 'TBA' }} | 🕒 {{ info.course.startTime }} - {{ info.course.endTime }}</p>
+        </div>
+      </div>
+      <div class="timer-badge">
+        <span class="time">{{ info.countdownText }}</span>
+        <span class="label">until start</span>
+      </div>
+    </div>
+  } @else {
+    <div class="empty-banner">
+      <span class="icon">🎉</span>
+      <div>
+        <h3>No more classes scheduled for today!</h3>
+        <p>Enjoy your free time or focus on your assignments.</p>
+      </div>
+    </div>
+  }
+</div>

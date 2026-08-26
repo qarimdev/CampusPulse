@@ -1,0 +1,41 @@
+<div class="task-card">
+  <div class="task-header">
+    <div>
+      <h3>Quick Tasks & Assignments 📝</h3>
+      <p class="subtitle">{{ completedCount() }} of {{ totalCount() }} completed</p>
+    </div>
+  </div>
+
+  <div class="add-task-form">
+    <input
+      type="text"
+      placeholder="Add a new task..."
+      [ngModel]="newTaskTitle()"
+      (ngModelChange)="newTaskTitle.set($event)"
+      (keyup.enter)="addTask()"
+    />
+    <select [ngModel]="newTaskPriority()" (ngModelChange)="newTaskPriority.set($event)">
+      <option value="low">Low</option>
+      <option value="medium">Med</option>
+      <option value="high">High</option>
+    </select>
+    <button (click)="addTask()">Add</button>
+  </div>
+
+  <div class="task-list">
+    @for (task of tasks(); track task.id) {
+      <div class="task-item" [class.completed]="task.completed">
+        <label class="checkbox-label">
+          <input type="checkbox" [checked]="task.completed" (change)="toggleTask(task.id)" />
+          <span class="title">{{ task.title }}</span>
+        </label>
+        <div class="right-actions">
+          <span class="priority-tag" [class]="task.priority">{{ task.priority }}</span>
+          <button class="btn-del" (click)="deleteTask(task.id)">🗑️</button>
+        </div>
+      </div>
+    } @empty {
+      <p class="empty-msg">No tasks yet! Add one above.</p>
+    }
+  </div>
+</div>

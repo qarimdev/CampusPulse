@@ -6,8 +6,8 @@ import { Course } from '../../services/course';
   selector: 'app-timetable',
   standalone: true,
   imports: [CommonModule],
-  templateUrl: './timetable.component.html',
-  styleUrl: './timetable.component.scss',
+  templateUrl: './timetable.html',
+  styleUrl: './timetable.scss',
 })
 export class TimetableComponent {
   @Input() courses: Course[] = [];

@@ -5,12 +5,22 @@ import { RouterLink } from '@angular/router';
 import { AuthService } from '../../services/auth';
 import { Course, CourseService } from '../../services/course';
 import { GpaCalculatorComponent } from '../gpa-calculator/gpa-calculator';
+import { NextClassComponent } from '../next-class/next-class';
+import { TaskChecklistComponent } from '../task-checklist/task-checklist';
 import { TimetableComponent } from '../timetable/timetable';
 
 @Component({
   selector: 'app-profile',
   standalone: true,
-  imports: [CommonModule, RouterLink, FormsModule, GpaCalculatorComponent, TimetableComponent],
+  imports: [
+    CommonModule,
+    RouterLink,
+    FormsModule,
+    GpaCalculatorComponent,
+    TimetableComponent,
+    NextClassComponent,
+    TaskChecklistComponent,
+  ],
   templateUrl: './profile.html',
   styleUrl: './profile.scss',
 })
