@@ -12,8 +12,8 @@ export interface GradeThreshold {
   selector: 'app-grade-target-calc',
   standalone: true,
   imports: [CommonModule, FormsModule],
-  templateUrl: './grade-target-calc.component.html',
-  styleUrl: './grade-target-calc.component.scss',
+  templateUrl: './grade-target-calc.html',
+  styleUrl: './grade-target-calc.scss',
 })
 export class GradeTargetCalcComponent {
   @Input() courses: Course[] = [];

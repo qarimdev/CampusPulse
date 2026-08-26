@@ -7,6 +7,15 @@
     </div>
 
     <div class="nav-links">
+      <!-- 🌙 Dark/Light Theme Toggle Button -->
+      <button 
+        class="theme-toggle-btn" 
+        (click)="themeService.toggleDarkMode()"
+        [title]="'Switch to ' + (themeService.isDarkMode() ? 'Light' : 'Dark') + ' Mode'"
+      >
+        {{ themeService.isDarkMode() ? '☀️ Light' : '🌙 Dark' }}
+      </button>
+
       <a routerLink="/dashboard" class="nav-btn">📊 Dashboard</a>
       <button class="btn-logout" (click)="onLogout()">Logout</button>
     </div>

@@ -13,8 +13,8 @@ export interface StudentTask {
   selector: 'app-task-checklist',
   standalone: true,
   imports: [CommonModule, FormsModule],
-  templateUrl: './task-checklist.component.html',
-  styleUrl: './task-checklist.component.scss',
+  templateUrl: './task-checklist.html',
+  styleUrl: './task-checklist.scss',
 })
 export class TaskChecklistComponent implements OnInit {
   tasks = signal<StudentTask[]>([]);

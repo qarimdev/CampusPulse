@@ -4,11 +4,13 @@ import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { AuthService } from '../../services/auth';
 import { Course, CourseService } from '../../services/course';
+import { ThemeService } from '../../services/theme';
 import { GpaCalculatorComponent } from '../gpa-calculator/gpa-calculator';
 import { GradeTargetCalcComponent } from '../grade-target-calc/grade-target-calc';
 import { NextClassComponent } from '../next-class/next-class';
 import { TaskChecklistComponent } from '../task-checklist/task-checklist';
 import { TimetableComponent } from '../timetable/timetable';
+
 @Component({
   selector: 'app-profile',
   standalone: true,
@@ -28,6 +30,7 @@ import { TimetableComponent } from '../timetable/timetable';
 export class ProfileComponent implements OnInit {
   private authService = inject(AuthService);
   private courseService = inject(CourseService);
+  themeService = inject(ThemeService);
 
   currentUser = this.authService.currentUser;
 
