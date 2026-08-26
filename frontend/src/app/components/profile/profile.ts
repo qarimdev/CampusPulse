@@ -5,10 +5,10 @@ import { RouterLink } from '@angular/router';
 import { AuthService } from '../../services/auth';
 import { Course, CourseService } from '../../services/course';
 import { GpaCalculatorComponent } from '../gpa-calculator/gpa-calculator';
+import { GradeTargetCalcComponent } from '../grade-target-calc/grade-target-calc';
 import { NextClassComponent } from '../next-class/next-class';
 import { TaskChecklistComponent } from '../task-checklist/task-checklist';
 import { TimetableComponent } from '../timetable/timetable';
-
 @Component({
   selector: 'app-profile',
   standalone: true,
@@ -20,6 +20,7 @@ import { TimetableComponent } from '../timetable/timetable';
     TimetableComponent,
     NextClassComponent,
     TaskChecklistComponent,
+    GradeTargetCalcComponent,
   ],
   templateUrl: './profile.html',
   styleUrl: './profile.scss',

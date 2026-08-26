@@ -1,0 +1,90 @@
+<div class="what-if-card">
+  <div class="card-header">
+    <div class="header-title">
+      <span class="icon">🎯</span>
+      <div>
+        <h3>Grade Target "What-If" Calculator</h3>
+        <p class="subtitle">Calculate what score you need on your final exam to land your target grade</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="calc-grid">
+    <!-- Controls Column -->
+    <div class="inputs-col">
+      <div class="form-group">
+        <label>Coursework Weight / Final Weight</label>
+        <div class="weight-inputs">
+          <div class="input-with-label">
+            <input
+              type="number"
+              min="0"
+              max="100"
+              [ngModel]="courseworkWeight()"
+              (ngModelChange)="courseworkWeight.set($event)"
+            />
+            <span>% Coursework</span>
+          </div>
+          <span class="plus-icon">+</span>
+          <div class="read-only-box">
+            <span>{{ finalExamWeight() }}% Final</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Current Earned Coursework Score (% total overall)</label>
+        <input
+          type="number"
+          min="0"
+          [max]="courseworkWeight()"
+          [ngModel]="currentCourseworkScore()"
+          (ngModelChange)="currentCourseworkScore.set($event)"
+          placeholder="e.g. 45 out of 60"
+        />
+        <small class="hint">Earned {{ currentCourseworkScore() }} / {{ courseworkWeight() }} points so far</small>
+      </div>
+
+      <div class="form-group">
+        <label>Target Grade Threshold</label>
+        <div class="preset-pills">
+          @for (g of gradeScale; track g.label) {
+            <button
+              class="pill-btn"
+              [class.active]="targetGradePct() === g.minPct"
+              (click)="setTargetFromPreset(g.minPct)"
+            >
+              {{ g.label }}
+            </button>
+          }
+        </div>
+      </div>
+    </div>
+
+    <!-- Output Result Column -->
+    <div class="result-col">
+      <div class="result-card" [class]="statusMessage().type">
+        <span class="label">Required Final Exam Score</span>
+        <div class="big-score">
+          {{ neededFinalScorePct() }}<span class="unit">%</span>
+        </div>
+        <p class="status-text">{{ statusMessage().text }}</p>
+
+        <div class="summary-breakdown">
+          <div class="row">
+            <span>Current Points:</span>
+            <strong>{{ currentCourseworkScore() }} pts</strong>
+          </div>
+          <div class="row">
+            <span>Points Needed from Final:</span>
+            <strong>{{ mathMax(0, targetGradePct() - currentCourseworkScore()) }} pts</strong>
+          </div>
+          <div class="row">
+            <span>Target Score:</span>
+            <strong>{{ targetGradePct() }}% overall</strong>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
