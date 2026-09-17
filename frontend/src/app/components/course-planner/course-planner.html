@@ -32,7 +32,7 @@
               <span class="credits">{{ course.credits }} Credits</span>
             </div>
             <h4>{{ course.title }}</h4>
-            <p class="schedule">{{ course.days.join(', ') }} • {{ course.startTime }} - {{ course.endTime }}</p>
+            <p class="schedule">{{ course.days?.join(', ') }} • {{ course.startTime }} - {{ course.endTime }}</p>
 
             @if (isConflicting(course)) {
               <span class="conflict-tag">⚠️ Time Conflict</span>

@@ -6,13 +6,13 @@ import { Course } from '../../services/course';
   selector: 'app-next-class',
   standalone: true,
   imports: [CommonModule],
-  templateUrl: './next-class.component.html',
-  styleUrl: './next-class.component.scss',
+  templateUrl: './next-class.html',
+  styleUrl: './next-class.scss',
 })
 export class NextClassComponent implements OnInit, OnDestroy {
   @Input() courses: Course[] = [];
 
-  private timer: any;
+  private timer: ReturnType<typeof setInterval> | null = null;
   now = signal<Date>(new Date());
 
   dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
